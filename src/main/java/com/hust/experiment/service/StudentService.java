@@ -32,7 +32,7 @@ public class StudentService {
                 Map<String,Object> regMap = userService.register(student.getStuId(),"123456","123456");
                 if(regMap.isEmpty()||regMap.size() == 0){
                     User user = userService.getUserbyAccount(student.getStuId());
-                    userService.updateUserMessage(user.getAccount(),user.getUrl(),student.getName(),student.getClassname(),student.getAcademy());
+                    userService.updateUserMessage(user.getAccount(),user.getUrl(),student.getName(),student.getClassname(),student.getAcademy(),user.getAccount());
                 }else{
                     number ++;
                     map.putAll(regMap);

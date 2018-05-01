@@ -8,10 +8,10 @@ import java.util.List;
 @Mapper
 public interface UserDao {
     String TABLE_NAME = "user";
-    String SELECT_FIELDS = " id, account, password, position, url, salt, name, classname, academy";
-    String INSERT_FIELDS = " account, password, position, url, salt, name, classname, academy";
+    String SELECT_FIELDS = " id, account, password, position, url, salt, name, classname, academy, nickname";
+    String INSERT_FIELDS = " account, password, position, url, salt, name, classname, academy, nickname";
 
-    @Insert({"insert into ",TABLE_NAME,"(",INSERT_FIELDS ,") values (#{account},#{password},#{position},#{url},#{salt},#{name},#{classname},#{academy})"})
+    @Insert({"insert into ",TABLE_NAME,"(",INSERT_FIELDS ,") values (#{account},#{password},#{position},#{url},#{salt},#{name},#{classname},#{academy},#{nickname})"})
     int addUser(User user);
 
     @Select({"select ", SELECT_FIELDS, " from ", TABLE_NAME, " where id=#{id}"})
@@ -27,7 +27,7 @@ public interface UserDao {
     void deleteUserById(int id);
 
     void updateUserMessage(@Param("account") String account,@Param("url") String url,@Param("name") String name,
-                           @Param("classname")String classname,@Param("academy") String academy);
+                           @Param("classname")String classname,@Param("academy") String academy,@Param("nickname")String nickname);
 
     List<User> getAllUser();
 

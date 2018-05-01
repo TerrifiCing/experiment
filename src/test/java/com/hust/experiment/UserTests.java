@@ -39,7 +39,7 @@ public class UserTests {
     public void test1(){
         List<User> list = userService.getAllUser();
         for(User user : list){
-            userService.updateUserMessage(user.getAccount(),user.getUrl(),user.getName(),"电信1406","电信学院");
+            userService.updateUserMessage(user.getAccount(),user.getUrl(),user.getName(),"电信1406","电信学院",user.getAccount());
         }
     }
 

@@ -38,7 +38,10 @@ public class InitDatabaseTests {
         //添加5个学生用户
         for(int i = 0;i < 5;i ++){
             userService.register(String.format("U20141300%d",i + 1),"123456","123456");
+            userService.updateUserMessage(String.format("U20141300%d",i + 1),userService.getUserById(i + 1).getUrl(),"学生"+i,
+                    "1406","电信学院",String.format("U20141300%d",i + 1));
         }
+        
         //添加一个管理员
         userService.register("M201413407","123456","123456");
         //添加三个老师用户

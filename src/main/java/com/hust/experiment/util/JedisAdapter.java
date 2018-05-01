@@ -47,4 +47,61 @@ public class JedisAdapter implements InitializingBean {
             }
         }
     }
+
+    public long sadd(String key,String value){
+        Jedis jedis = null;
+        try{
+            jedis = pool.getResource();
+            return jedis.sadd(key,value);
+        }catch (Exception e){
+            System.out.println(e.getMessage());
+            return 0;
+        }finally {
+            if(jedis != null){
+                jedis.close();
+            }
+        }
+    }
+
+    public long srem(String key,String value){
+        Jedis jedis = null;
+        try{
+            jedis = pool.getResource();
+            return jedis.srem(key,value);
+        }catch (Exception e){
+            System.out.println(e.getMessage());
+            return 0;
+        }finally {
+            if(jedis != null){
+                jedis.close();
+            }
+        }
+    }
+    public boolean sismember(String key, String value) {
+        Jedis jedis = null;
+        try {
+            jedis = pool.getResource();
+            return jedis.sismember(key, value);
+        } catch (Exception e) {
+            return false;
+        } finally {
+            if (jedis != null) {
+                jedis.close();
+            }
+        }
+    }
+
+    public long scard(String key) {
+        Jedis jedis = null;
+        try {
+            jedis = pool.getResource();
+            return jedis.scard(key);
+        } catch (Exception e) {
+            return 0;
+        } finally {
+            if (jedis != null) {
+                jedis.close();
+            }
+        }
+    }
 }

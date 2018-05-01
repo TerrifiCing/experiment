@@ -78,6 +78,7 @@ public class UserService {
         user.setPassword(ExperimentUtil.MD5(password + user.getSalt()));
         user.setUrl(String.format("http://images.nowcoder.com/head/%dt.png",new Random().nextInt(1000)));
         user.setName(account);
+        user.setNickname(account);
         userDao.addUser(user);
         return map;
     }
@@ -125,8 +126,8 @@ public class UserService {
     }
 
     //更新
-    public void updateUserMessage(String account,String url,String name,String classname,String academy){
-        userDao.updateUserMessage(account,url,name,classname,academy);
+    public void updateUserMessage(String account,String url,String name,String classname,String academy,String nickname){
+        userDao.updateUserMessage(account,url,name,classname,academy,nickname);
     }
 
     public String addLoginTicket(int userId){
@@ -171,7 +172,7 @@ public class UserService {
         String fileName = UUID.randomUUID().toString().replaceAll("-","") + "." + fileExt;
         Files.copy(file.getInputStream(),new File(ExperimentUtil.FILE_DIR + fileName).toPath(),
                 StandardCopyOption.REPLACE_EXISTING);
-        return ExperimentUtil.EXPERIMENT_DOMAIN + fileType + "?name=" + fileName;
+        return ExperimentUtil.EXPERIMENT_DOMAIN + "/getFile?name=" + fileName;
     }
 
     public List<User> selectUserByClass(String classname){

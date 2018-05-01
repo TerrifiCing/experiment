@@ -9,7 +9,7 @@ import java.util.Map;
 
 public class ExperimentUtil {
     public static final Logger logger = LoggerFactory.getLogger(ExperimentUtil.class);
-    public static String FILE_DIR = "C:\\MY_IDEA\\experiment\\upload\\";
+    public static String FILE_DIR = "D:\\workPlace\\projects\\experiment\\upload\\";
     public static String [] IMAGE_FILE_EXT = {"jpg","jpeg","bmp","png"};
     public static String [] FILE_EXT = {"docx","pdf"};
     public static String EXPERIMENT_DOMAIN = "http://localhost:8080/";

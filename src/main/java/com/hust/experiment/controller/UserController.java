@@ -58,11 +58,12 @@ public class UserController {
                              @RequestParam(value = "url") String url,
                              @RequestParam(value = "name") String name,
                              @RequestParam(value = "classname") String classname,
-                             @RequestParam(value = "academy") String academy){
+                             @RequestParam(value = "academy") String academy,
+                             @RequestParam(value = "nickname") String nickname){
         Map<String,Object> map = new HashMap<>();
         try{
             if(userService.hasUser(account)){
-                userService.updateUserMessage(account,url,name,classname,academy);
+                userService.updateUserMessage(account,url,name,classname,academy,nickname);
                 map.put("msgUpdate","更新成功");
                 return ExperimentUtil.getJSONString(0,map);
             }else{
@@ -167,5 +168,10 @@ public class UserController {
         }catch (Exception e){
             logger.error("读取文件错误!" + e.getMessage());
         }
+    }
+
+    @GetMapping(path = "/viewReport")
+    public String viewReport(){
+        return "html-admin/view-report";
     }
 }

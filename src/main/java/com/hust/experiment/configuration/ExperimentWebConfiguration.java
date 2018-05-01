@@ -20,7 +20,7 @@ public class ExperimentWebConfiguration extends WebMvcConfigurerAdapter{
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(passportInterceptor);
         registry.addInterceptor(loginRequiredInterceptor).excludePathPatterns("/loginIndex","/index",
-                "/registerIndex","/register","/uploadFile","/getFile","/importExcel");
+                "/registerIndex","/register","/uploadFile","/getFile","/importExcel","/viewReport");
         super.addInterceptors(registry);
     }
 }

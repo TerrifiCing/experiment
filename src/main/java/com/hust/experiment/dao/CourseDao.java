@@ -1,7 +1,6 @@
 package com.hust.experiment.dao;
 
 import com.hust.experiment.model.Course;
-import com.hust.experiment.model.Exp;
 import org.apache.ibatis.annotations.*;
 
 @Mapper
@@ -14,7 +13,7 @@ public interface CourseDao {
     int addCourse(Course course);
 
     @Select({"select ", SELECT_FIELDS, " from ", TABLE_NAME, " where id=#{id}"})
-    Exp selectCourse(int id);
+    Course selectCourse(int id);
 
     @Delete({"delete from ", TABLE_NAME, " where id=#{id}"})
     void deleteCourse(int id);
