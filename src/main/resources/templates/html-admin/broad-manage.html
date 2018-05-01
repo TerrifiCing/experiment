@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="utf-8" />
+    <title>华科实验系统</title>
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:400,300,400italic,700' rel='stylesheet' type='text/css' />
+    <link href="../css/font-awesome.min.css" rel="stylesheet" />
+    <link href="../css/bootstrap.css" rel="stylesheet"/>
+    <link href="../css/bootstrap.min.css" rel="stylesheet" />
+    <link href="../css/templatemo-style.css" rel="stylesheet" />
+    <link href="../css/main.css" rel="stylesheet"/>
+    <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+    <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+</head>
+
+<body>
+    <!-- Left column -->
+    <div class="templatemo-flex-row">
+        <div class="templatemo-sidebar">
+            <header class="templatemo-site-header">
+                <div class="square"></div>
+                <h1>HUST LAB</h1>
+            </header>
+            <div class="profile-photo-container">
+                <img src="../images/profile-photo.jpg" alt="Profile Photo" class="img-responsive" />
+                <div class="profile-photo-overlay"></div>
+            </div>
+            <div class="mobile-menu-icon">
+                <i class="fa fa-bars"></i>
+            </div>
+            <nav class="templatemo-left-nav">
+                <ul>
+					<li><a th:href="@{/{account}/announcement (account=${user.account})}" class="active"><i class="fa fa-map-marker fa-fw"></i>公告栏</a></li>
+					<li><a th:href="@{/{account}/userCenter (account=${user.account})}" ><i class="fa fa-home fa-fw"></i>个人中心</a></li>
+					<li><a href="/userManage"><i class="fa fa-users fa-fw"></i>成员管理</a></li>
+					<li><a href="/courseManage"><i class="fa fa-database fa-fw"></i>实验课程管理</a></li>
+					<li><a href="/reportManage"><i class="fa fa-sliders fa-fw"></i>实验报告与数据管理</a></li>
+					<li><a href="/logout"><i class="fa fa-eject fa-fw"></i>登出</a></li>
+				</ul>
+            </nav>
+        </div>
+        <!-- Main content -->
+        <div class="templatemo-content col-1 light-gray-bg">
+            <div class="templatemo-top-nav-container">
+                <div class="row">
+                    <nav class="templatemo-top-nav col-lg-12 col-md-12">
+                        <ul class="text-uppercase">
+                             <li><h2><a th:href="@{/{account}/announcement (account=${user.account})}" class="active">浏览公告</a></h2></li>
+							 <li><h2><a href="/createAnnouncement">创建公告</a></h2></li>
+                            <div style="float: right">
+                                <li>
+                                    <div class="dropdown">
+                                        <img id="avatar-img" src="../images/sunset.jpg" th:src="${user.url}" alt="头像"/>
+                                        <div class="dropdown-content">
+                                            <a th:href="@{/{account}/userCenter (account=${user.account})}">个人主页</a>
+                                            <a href="/changePassword">修改密码</a>
+                                            <a href="/logout">退出登录</a>
+                                        </div>
+                                    </div>
+                                </li>
+                                <li style="font-family: 微软雅黑" th:text="'&nbsp; ' + ${user.name}+'，欢迎回来！'">U201513315，欢迎回来！</li>
+                            </div>
+                        </ul>
+                    </nav>
+                </div>
+            </div>
+            <div class="templatemo-content-container">
+          <tr th:each="mailVo : ${mailVos}">
+            <td>
+          <div class="templatemo-flex-row flex-content-row">
+            <div class="templatemo-content-widget white-bg col-2">
+              <i class="fa fa-times"></i>
+              <div class="square"></div>
+              <h2 class="announcement-title templatemo-inline-block" th:text="${mailVo.get('mail').title}">公告1</h2>
+                <p hidden="hidden" th:value="${mailVo.get('mail').id}"></p>
+              <div class="announcement-status">
+                <div class="publisher" th:text="'发布人：' + ${mailVo.get('fromName')}">发布人：陈老师</div>
+                <div class="release-date" th:text="'发布时间：' + ${#dates.format(mailVo.get('mail').time, 'yyyy/MM/dd HH:mm')}">发布时间：2018.03.01  </div>
+                <div class="label label-success release-label">模电</div>
+              </div>
+              <hr/>
+              <p th:text="${mailVo.get('mail').content}">公告内容
+              </p>
+
+            </div>
+          </div>
+            </td>
+          </tr>
+
+        </div>
+            <!-- Second row ends -->
+            <div class="mask"></div>
+            <div class="dialog">
+                <div class="title">
+                    删除时提示
+                </div>
+                <div class="content">
+                    <span>您真的要删除该条记录吗？</span>
+                </div>
+                <div class="bottom">
+                    <input id="Button2" type="submit" value="确定" class="templatemo-delete-btn" />&nbsp;&nbsp;
+                    <input id="Button3" type="button" value="取消" class="templatemo-edit-btn" />
+                </div>
+            </div>
+            <footer class="text-right">
+                <p>Copyright &copy; 2018 Company Name | Designed by <a href="http://www.templatemo.com" target="_parent">templatemo</a></p>
+            </footer>
+        </div>
+    </div>
+
+    <!-- JS -->
+    <script src="../js/jquery.js"></script>
+    <!-- jQuery 3.3.1-->
+    <!-- <script type="text/javascript" src="../js/templatemo-script.js"></script> -->
+    <!-- Templatemo Script -->
+    <script src="../js/main.js"></script>
+</body>
+
+</html>

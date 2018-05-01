@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="utf-8" />
+    <title>华科实验系统</title>
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:400,300,400italic,700' rel='stylesheet' type='text/css' />
+    <link href="../css/font-awesome.min.css" rel="stylesheet" />
+    <link href="../css/bootstrap.css" rel="stylesheet">
+    <link href="../css/bootstrap.min.css" rel="stylesheet" />
+    <link href="../css/templatemo-style.css" rel="stylesheet" />
+    <link href="../css/main.css" rel="stylesheet">
+    <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+    <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+</head>
+
+<body>
+    <!-- Left column -->
+    <div class="templatemo-flex-row">
+        <div class="templatemo-sidebar">
+            <header class="templatemo-site-header">
+                <div class="square"></div>
+                <h1>HUST LAB</h1>
+            </header>
+            <div class="profile-photo-container">
+                <img src="../images/profile-photo.jpg" alt="Profile Photo" class="img-responsive" />
+                <div class="profile-photo-overlay"></div>
+            </div>
+            <div class="mobile-menu-icon">
+                <i class="fa fa-bars"></i>
+            </div>
+            <nav class="templatemo-left-nav">
+                <ul>
+                    <li><a th:href="@{/{account}/announcement (account=${user.account})}"><i class="fa fa-map-marker fa-fw"></i>公告栏</a></li>
+					<li><a th:href="@{/{account}/userCenter (account=${user.account})}" ><i class="fa fa-home fa-fw"></i>个人中心</a></li>
+					<li><a href="/userManage" ><i class="fa fa-users fa-fw"></i>成员管理</a></li>
+					<li><a href="/courseManage"><i class="fa fa-database fa-fw"></i>实验课程管理</a></li>
+					<li><a href="/reportManage"  class="active"><i class="fa fa-sliders fa-fw"></i>实验报告与数据管理</a></li>
+					<li><a href="/logout"><i class="fa fa-eject fa-fw"></i>登出</a></li>
+                </ul>
+            </nav>
+        </div>
+        <!-- Main content -->
+        <div class="templatemo-content col-1 light-gray-bg">
+            <div class="templatemo-top-nav-container">
+                <div class="row">
+                    <nav class="templatemo-top-nav col-lg-12 col-md-12">
+                        <ul class="text-uppercase">
+                            <li>
+                                <h2><a href="/reportManage" class="active">实验报告与数据管理</a></h2>
+                            </li>
+                            <div style="float: right">
+                                <li>
+                                    <div class="dropdown">
+                                        <img id="avatar-img" src="../images/sunset.jpg" th:src="${user.url}" alt="头像">
+                                        <div class="dropdown-content">
+                                            <a th:href="@{/{account}/userCenter (account=${user.account})}">个人主页</a>
+                                            <a href="/changePassword">修改密码</a>
+                                            <a href="/logout">退出登录</a>
+                                        </div>
+                                    </div>
+                                </li>
+                                <li style="font-family: 微软雅黑" th:text="'&nbsp; ' + ${user.name}+'，欢迎回来！'">U201513315，欢迎回来！</li>
+                            </div>
+                        </ul>
+                    </nav>
+                </div>
+            </div>
+            <div class="templatemo-content-container">
+                <div class="templatemo-content-widget white-bg ">
+                    <div class="row form-group">
+                        <div class="col-lg-2 col-md-2 form-group">
+                            <label>学号</label>
+                            <select class="form-control shift-info">
+                                <option>类型1</option>
+                                <option>类型2</option>
+                                <option>类型3</option>
+                            </select>
+                        </div>
+                        <div class="col-lg-3 col-md-3 form-group">
+                            <label>学院</label>
+                            <select class="form-control shift-info">
+                                <option>类型1</option>
+                                <option>类型2</option>
+                                <option>类型3</option>
+                            </select>
+                        </div>
+                        <div class="col-lg-3 col-md-3 form-group">
+                            <label>班级</label>
+                            <select class="form-control shift-info">
+                                <option>类型1</option>
+                                <option>类型2</option>
+                                <option>类型3</option>
+                            </select>
+                        </div>
+                        <div class="col-lg-2 col-md-2 form-group">
+                            <section><!-- Checbox One -->
+                                <h3>只看未评分</h3>
+                                <div class="checkboxOne"><input id="checkboxOneInput" type="checkbox" name="" value="1" />
+                                <label for="checkboxOneInput"></label></div>
+                            </section>
+                        </div>
+                        <div class="col-lg-2 col-md-2 form-group">
+                            <button class="templatemo-edit-btn" id="search-btn" type="button">搜索</button>
+                            <button class="templatemo-edit-btn" id="search-btn" type="button">全部</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="templatemo-content-widget no-padding">
+                    <div class="panel panel-default table-responsive">
+                        <table class="table table-striped table-bordered templatemo-user-table">
+                            <thead>
+                                <tr>
+                                    <td width="50px"><a class="white-text templatemo-sort-by"><span class="caret"></span></a></td>
+                                    <td width="120px"><a class="white-text templatemo-sort-by">学生名 <span class="caret"></span></a></td>
+                                    <td width="120px"><a class="white-text templatemo-sort-by">实验名 <span class="caret"></span></a></td>
+                                    <td width="120px"><a class="white-text templatemo-sort-by">实验数据 <span class="caret"></span></a></td>
+                                    <td width="120px"><a class="white-text templatemo-sort-by">实验报告 <span class="caret"></span></a></td>
+                                    <td width="80px"><a class="white-text templatemo-sort-by">得分 <span class="caret"></span></a></td>
+                                    <td width="200">操作</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>1.</td>
+                                    <td >John</td>
+                                    <td >物理</td>
+                                    <td><a href="">@jS</a></td>
+                                    <td><a href="">js@company.com</a></td>
+                                    <td class="edit">80</td>
+                                    <td width="200">
+                                        <button class="templatemo-edit-btn edit-member" type="button">编辑</button>&nbsp;
+                                        <button class="templatemo-delete-btn delete-member" type="button">删除</button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="edit">2.</td>
+                                    <td class="edit">Bill</td>
+                                    <td class="edit">数电</td>
+                                    <td><a href="">@bJ</a></td>
+                                    <td><a href="">bj@company.com</a></td>
+                                    <td class="edit">80</td>
+                                    <td width="200">
+                                        <button class="templatemo-edit-btn edit-member" type="button">编辑</button>&nbsp;
+                                        <button class="templatemo-delete-btn delete-member" type="button">删除</button>
+                                    </td>
+                                </tr>
+
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <!-- Second row ends -->
+            <footer class="text-right">
+                <p>Copyright &copy; 2018 Company Name | Designed by <a href="http://www.templatemo.com" target="_parent">templatemo</a></p>
+            </footer>
+        </div>
+    </div>
+    </div>
+    <!-- JS -->
+    <script src="../js/jquery.js"></script>
+    <!-- jQuery 3.3.1-->
+    <script src="../js/main.js"></script>
+</body>
+
+</html>
