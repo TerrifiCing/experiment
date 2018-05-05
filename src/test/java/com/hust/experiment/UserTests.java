@@ -2,6 +2,7 @@ package com.hust.experiment;
 
 import com.hust.experiment.dao.ExpDao;
 import com.hust.experiment.dao.MailDao;
+import com.hust.experiment.dao.ReportDao;
 import com.hust.experiment.dao.UserDao;
 import com.hust.experiment.model.Exp;
 import com.hust.experiment.model.Mail;
@@ -34,6 +35,9 @@ public class UserTests {
 
     @Autowired
     UserService userService;
+
+    @Autowired
+    ReportDao reportDao;
 
     @Test
     public void test1(){
@@ -83,7 +87,7 @@ public class UserTests {
 
     @Test
     public void test6(){
-        System.out.println(expDao.getAllExperiment().size());
+        expDao.selectAllTeacher();
     }
 
     @Test
@@ -91,5 +95,16 @@ public class UserTests {
         User user = userDao.selectUserById(1);
         user.setPassword("123456");
         userDao.updatePassword(user);
+    }
+
+    @Test
+    public void selectAcademy(){
+        userDao.selectAllAcademy();
+    }
+
+    @Test
+    public void test4396(){
+        reportDao.getAllReports();
+        reportDao.selectAllCourseId();
     }
 }

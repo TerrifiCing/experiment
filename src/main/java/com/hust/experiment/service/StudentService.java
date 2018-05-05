@@ -25,12 +25,12 @@ public class StudentService {
 
     //批量注册
     public Map<String,Object> batchRegistration(List<Student> studentList){
-        Map<String,Object> map  = new HashMap();
+        Map<String,Object> map  = new HashMap<>();
         int number = 0;
         try{
             for(Student student : studentList){
                 Map<String,Object> regMap = userService.register(student.getStuId(),"123456","123456");
-                if(regMap.isEmpty()||regMap.size() == 0){
+                if(regMap.isEmpty()){
                     User user = userService.getUserbyAccount(student.getStuId());
                     userService.updateUserMessage(user.getAccount(),user.getUrl(),student.getName(),student.getClassname(),student.getAcademy(),user.getAccount());
                 }else{
@@ -54,8 +54,10 @@ public class StudentService {
         }
     }
 
-    public Student selectByStudentId(String account){
-        return studentDao.selectStudentByStudentId(account);
+    public void registerStudent(Student student){
+        userService.register(student.getStuId(),"123456","123456");
+        User user = userService.getUserbyAccount(student.getStuId());
+        userService.updateUserMessage(user.getAccount(),user.getUrl(),student.getName(),student.getClassname(),student.getAcademy(),user.getAccount());
     }
 
     public Student selectLastStudent(){

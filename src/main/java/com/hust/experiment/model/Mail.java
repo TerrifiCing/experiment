@@ -10,6 +10,15 @@ public class Mail {
     private String content;
     private Date time;
     private String title;
+    private String about;
+
+    public String getAbout() {
+        return about;
+    }
+
+    public void setAbout(String about) {
+        this.about = about;
+    }
 
     public String getTitle() {
         return title;

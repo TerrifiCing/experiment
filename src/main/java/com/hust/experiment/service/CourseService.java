@@ -7,6 +7,8 @@ import com.hust.experiment.util.RedisKeyUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class CourseService {
     @Autowired
@@ -28,6 +30,14 @@ public class CourseService {
         }else {
             return false;
         }
+    }
+
+    public Course getCourseById(int id){
+        return courseDao.selectCourse(id);
+    }
+
+    public List<Course> getCourseByExpId(int expId){
+        return courseDao.selectCourseByExp(expId);
     }
 
     public void deleteCourse(int id){

@@ -3,6 +3,8 @@ package com.hust.experiment.dao;
 import com.hust.experiment.model.Course;
 import org.apache.ibatis.annotations.*;
 
+import java.util.List;
+
 @Mapper
 public interface CourseDao {
     String TABLE_NAME = "course";
@@ -18,4 +20,6 @@ public interface CourseDao {
     @Delete({"delete from ", TABLE_NAME, " where id=#{id}"})
     void deleteCourse(int id);
 
+    @Select({"select ", SELECT_FIELDS, " from ", TABLE_NAME, " where exp_id=#{id}"})
+    List<Course> selectCourseByExp(int id);
 }

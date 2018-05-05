@@ -13,11 +13,11 @@ import java.util.List;
 public interface ReportDao {
 
     String TABLE_NAME = "report";
-    String SELECT_FIELDS = " id, student_id, course_id, score, report_url, data_url";
-    String INSERT_FIELDS = " student_id, course_id, score, report_url, data_url";
+    String SELECT_FIELDS = " id, student_id, course_id, score, report_url, data_url, status";
+    String INSERT_FIELDS = " student_id, course_id, score, report_url, data_url, status";
 
 
-    @Insert({"insert into ",TABLE_NAME,"(",INSERT_FIELDS ,") values (#{studentId},#{courseId},#{score},#{reportUrl},#{dataUrl})"})
+    @Insert({"insert into ",TABLE_NAME,"(",INSERT_FIELDS ,") values (#{studentId},#{courseId},#{score},#{reportUrl},#{dataUrl},#{status})"})
     int addReport(Report report);
 
     @Select({"select ", SELECT_FIELDS, " from ", TABLE_NAME, " where id=#{id}"})
@@ -31,4 +31,11 @@ public interface ReportDao {
 
     @Delete({"delete from ", TABLE_NAME, " where id=#{id}"})
     void deleteReport(int id);
+
+    List<Report> getAllReports();
+
+    List<Integer> selectAllCourseId();
+
+    List<Integer> selectAllStudentId();
+
 }

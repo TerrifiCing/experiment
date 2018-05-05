@@ -76,31 +76,38 @@
                         <div class="col-lg-3 col-md-3 form-group">
                             <label>学号</label>
                             <select class="form-control shift-info">
-                                <option>类型1</option>
-                                <option>类型2</option>
-                                <option>类型3</option>
+                                <option value="">学生</option>
+                                <option value="">教师</option>
+                                <option value="">管理员</option>
                             </select>
                         </div>
                         <div class="col-lg-4 col-md-4 form-group">
                             <label>学院</label>
                             <select class="form-control shift-info">
-                                <option>类型1</option>
-                                <option>类型2</option>
-                                <option>类型3</option>
+                                <tr th:each="academy : ${academies}">
+                                    <td>
+                                <option value="" th:text="${academy}">类型1</option>
+                                    </td>
+                                </tr>
                             </select>
                         </div>
                         <div class="col-lg-3 col-md-3 form-group">
                             <label>班级</label>
                             <select class="form-control shift-info">
-                                <option>类型1</option>
-                                <option>类型2</option>
-                                <option>类型3</option>
+                                <tr th:each="class:${classes}">
+                                    <td>
+                                <option value="" th:text="${class}">类型1</option>
+                                    </td>
+                                </tr>
                             </select>
                         </div>
                         <div class="col-lg-2 col-md-2 form-group">
                             <button class="templatemo-edit-btn" id="search-btn" type="button">搜索</button>
-                            <button class="templatemo-edit-btn" id="search-btn" type="button">全部</button>
+                            <button class="templatemo-edit-btn" id="search-btn" type="button" onclick="window.location.href='/userManage'">全部</button>
                         </div>
+                    </div>
+                    <div th:if="${seeAll != 1}">
+                    <label th:if="${selectUsers == null}" style="font-size: 15px">没有查询到任何结果，请尝试更换关键词！</label>
                     </div>
                 </div>
                 <div class="templatemo-content-widget no-padding">
@@ -117,6 +124,7 @@
                                     <td width="150px">操作</td>
                                 </tr>
                             </thead>
+                            <div th:if="${seeAll == 1}">
                             <tbody>
 							  <tr th:each="oneUser : ${allUser}">
 								<td th:text="${oneUser.id}">1.</td>
@@ -131,6 +139,23 @@
                                   </td>
 							  </tr>
 							</tbody>
+                            </div>
+                            <div th:if="${selectUsers != null}">
+                                <tbody>
+                                <tr th:each="User : ${selectUsers}">
+                                    <td th:text="${User.id}">1.</td>
+                                    <td th:text="${User.account}">U201413407</td>
+                                    <td th:text="${User.name}">Smith</td>
+                                    <td th:text="${User.position}" class="edit">学生</td>
+                                    <td th:text="${User.academy}" class="edit">电信</td>
+                                    <td th:text="${User.classname}" class="edit">1406</td>
+                                    <td width="200">
+                                        <button class="templatemo-edit-btn edit-member" type="button">编辑</button>&nbsp;
+                                        <button class="templatemo-delete-btn delete-member" type="button">删除</button>
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </div>
                         </table>
                     </div>
                 </div>

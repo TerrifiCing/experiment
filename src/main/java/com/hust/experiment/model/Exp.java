@@ -6,6 +6,15 @@ public class Exp {
     private int period;
     private int teacherId;
     private double credit;
+    private String semester;
+
+    public String getSemester() {
+        return semester;
+    }
+
+    public void setSemester(String semester) {
+        this.semester = semester;
+    }
 
     public int getId() {
         return id;

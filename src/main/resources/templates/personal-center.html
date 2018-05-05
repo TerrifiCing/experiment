@@ -74,13 +74,20 @@
 							</a>
                         </div>
                         <div class="media-body">
-                            <h2 class="media-heading text-uppercase blue-text" th:text="${user.name}">Really</h2>
+                            <h2 class="media-heading text-uppercase blue-text" th:text="${user.nickname}">Really</h2>
                             <p th:text="${user.academy}">自动化</p>
                         </div>
                     </div>
                     <div class="table-responsive">
                         <table class="table">
                             <tbody>
+                                <tr>
+                                    <td>
+                                        <div class="circle green-bg"></div>
+                                    </td>
+                                    <td>昵称</td>
+                                    <td class="edit" th:text="${user.nickname}">讲师</td>
+                                </tr>
                                 <tr>
                                     <td>
                                         <div class="circle green-bg"></div>
@@ -143,7 +150,7 @@
 　　        if(xg=='编辑'){
 　　　　        $('.edit').each(function(){
 　　　　　　    var old=$(this).html();
-　　　　　　    $(this).html("<input type='text' name='editname' value="+old+" class='text'>");
+　　　　　　    $(this).html("<input type='text' name='editname' value="+old+" >");
 　　　　    })
 　　　　    $(obj).html('保存');
 　　        }

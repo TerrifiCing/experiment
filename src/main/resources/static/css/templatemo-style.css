@@ -229,7 +229,7 @@ footer {
 }
 
 .profile-photo-overlay {
-	background-color: rgba(4, 152, 114, 0.35);
+	/*background-color: rgba(4, 152, 114, 0.35);*/
 	position: absolute;
 	top: 0;
 	left: 0;

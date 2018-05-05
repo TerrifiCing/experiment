@@ -80,10 +80,12 @@
                             </div>
                             <div class="col-lg-6 col-md-6 form-group">
                                 <label class="control-label templatemo-block">公告类型</label>
-                                <select class="form-control shift-info">
-                                    <option>类型1</option>
-                                    <option>类型2</option>
-                                    <option>类型3</option>
+                                <select class="form-control shift-info" value="" name="about">
+                                    <tr th:each="exp : ${exps}">
+                                        <td>
+                                    <option value="" th:text="${exp.expName}">类型1</option>
+                                        </td>
+                                    </tr>
                                 </select>
                             </div>
                         </div>
@@ -129,10 +131,12 @@
     <!-- JS -->
     <script src="../js/jquery.js"></script>
     <!-- jQuery 3.3.1-->
+
     <script src="https://rawgit.com/indrimuska/jquery-editable-select/master/src/jquery-editable-select.js"></script>
     <!-- <script type="text/javascript" src="../js/templatemo-script.js"></script> -->
     <!-- Templatemo Script -->
     <script src="../js/main.js"></script>
+    <script src="../js/edittableSelect.js"></script>
 </body>
 
 </html>

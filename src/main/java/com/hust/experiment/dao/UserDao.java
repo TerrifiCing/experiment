@@ -36,4 +36,14 @@ public interface UserDao {
 
     @Select({"select", SELECT_FIELDS,"from",TABLE_NAME, "where academy = #{academy}"})
     List<User> selectByAcademy(String academy);
+
+    @Select({"select", SELECT_FIELDS,"from",TABLE_NAME, "where position = #{position}"})
+    List<User> selectByPosition(String position);
+
+    @Select({"select", SELECT_FIELDS,"from",TABLE_NAME, "where name = #{name}"})
+    List<User> selectByName(String name);
+
+    List<String> selectAllAcademy();
+
+    List<String> selectAllClass();
 }

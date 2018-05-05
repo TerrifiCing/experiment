@@ -1,13 +1,7 @@
 package com.hust.experiment.controller;
 
-import com.hust.experiment.model.Exp;
-import com.hust.experiment.model.Student;
-import com.hust.experiment.model.User;
-import com.hust.experiment.model.ViewObject;
-import com.hust.experiment.service.ExpService;
-import com.hust.experiment.service.MailService;
-import com.hust.experiment.service.StudentService;
-import com.hust.experiment.service.UserService;
+import com.hust.experiment.model.*;
+import com.hust.experiment.service.*;
 import com.hust.experiment.util.ExperimentUtil;
 import com.hust.experiment.util.ReadExcel;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,8 +32,12 @@ public class ManagerController {
     @Autowired
     ExpService expService;
 
+    @Autowired
+    ReportService reportService;
+
     @RequestMapping(path = "/createAnnouncement" ,method = {RequestMethod.GET,RequestMethod.POST})
-    public String createAnnouncement(){
+    public String createAnnouncement(Model model){
+        model.addAttribute("exps",expService.getAllExp());
         return "/html-admin/create-announcement";
     }
 
@@ -48,16 +46,17 @@ public class ManagerController {
                           @RequestParam(value = "toId",defaultValue = "0") Integer toId,
                           @RequestParam("type") String type,
                           @RequestParam("content") String content,
-                          @RequestParam("title") String title){
+                          @RequestParam("title") String title,
+                          @RequestParam(value = "about",defaultValue = "其他") String about){
         if(type.equals("公告")){
-            if(mailService.addMail(fromId,content,title)){
+            if(mailService.addMail(fromId,content,title,about)){
                 String account = userService.getUserById(fromId).getAccount();
                 return "redirect:/" + account + "/announcement";
             }else{
                 return ExperimentUtil.getJSONString(1,"发送失败");
             }
         }else if(type.equals("私信")){
-            if(mailService.addMail(fromId,toId,content,title)){
+            if(mailService.addMail(fromId,toId,content,title,about)){
                 return ExperimentUtil.getJSONString(0,"私信发送成功");
             }else{
                 return ExperimentUtil.getJSONString(1,"发送失败");
@@ -74,27 +73,65 @@ public class ManagerController {
     }
 
     @RequestMapping(path = "/userManage" ,method = {RequestMethod.GET,RequestMethod.POST})
-    public String userManage(Model model){
+    public String userManage(Model model,@RequestParam(value = "param1",defaultValue = "")String accountParam,
+                             @RequestParam(value = "param2",defaultValue = "")String accademyParam,
+                             @RequestParam(value = "param3",defaultValue = "")String classParam,
+                             @RequestParam(value = "seeAll",defaultValue = "1") Integer seeAll){
         List<User> list = userService.getAllUser();
+        List<User> selectUserList = null;
         model.addAttribute("allUser",list);
+        model.addAttribute("classes",userService.getAllClass());
+        model.addAttribute("academies",userService.getAllAcademy());
+        model.addAttribute("seeAll",seeAll);
+        if(seeAll != 1){
+            if(!userService.getUserByParams(accountParam,accademyParam,classParam).isEmpty()){
+                selectUserList = userService.getUserByParams(accountParam,accademyParam,classParam);
+            }
+        }
+        model.addAttribute("selectUsers",selectUserList);
         return "/html-admin/member-manage";
     }
+
     @RequestMapping(path = "/courseManage" ,method = {RequestMethod.GET,RequestMethod.POST})
-    public String courseManage(Model model){
+    public String courseManage(Model model,@RequestParam(value = "param1",defaultValue = "")String semesterParam,
+                               @RequestParam(value = "param2",defaultValue = "")String expParam,
+                               @RequestParam(value = "param3",defaultValue = "")String teacherParam,
+                               @RequestParam(value = "seeAll",defaultValue = "1")Integer seeAll){
         List<Exp> list = expService.getAllExp();
-        List<ViewObject> vos = new ArrayList<>();
-        for(Exp exp : list){
-            ViewObject vo = new ViewObject();
-            vo.set("course",exp);
-            vo.set("teacher",userService.getUserById(exp.getTeacherId()));
-            vos.add(vo);
+        model.addAttribute("vos",expService.getExpViewObjects(list));
+        model.addAttribute("teachers",expService.getAllTeacher());
+        model.addAttribute("expNames",expService.getAllExp());
+        model.addAttribute("semesters",expService.getAllSemester());
+        List<Exp> selectExp = null;
+        if(seeAll != 1){
+            if(!expService.getExpByParams(semesterParam,expParam,teacherParam).isEmpty()){
+                selectExp = expService.getExpByParams(semesterParam,expParam,teacherParam);
+                model.addAttribute("selectedVos",expService.getExpViewObjects(selectExp));
+            }
         }
-        model.addAttribute("vos",vos);
+        model.addAttribute("seeAll",seeAll);
+        model.addAttribute("selectedExps",selectExp);
         return "/html-admin/lab-course";
     }
 
     @RequestMapping(path = "/reportManage" ,method = {RequestMethod.GET,RequestMethod.POST})
-    public String reportManage(Model model){
+    public String reportManage(Model model,@RequestParam(value = "param1",defaultValue = "")String account,
+                               @RequestParam(value = "param2",defaultValue = "")String accademy,
+                               @RequestParam(value = "param3",defaultValue = "")String expName,
+                               @RequestParam(value = "seeAll",defaultValue = "1")Integer seeAll){
+        model.addAttribute("allVos",reportService.getReportViewObjects(reportService.getAllReports()));
+        model.addAttribute("exps",reportService.getAllExpOfReport());
+        model.addAttribute("academies",reportService.getAllAcademiesOfReport());
+        List<Report> selectedReports = null;
+        if(seeAll != 1){
+            List<Report> tempList = reportService.getReportsByParams(account,accademy,expName);
+            if(!tempList.isEmpty()){
+                selectedReports = tempList;
+                model.addAttribute("selectedVos",reportService.getReportViewObjects(selectedReports));
+            }
+        }
+        model.addAttribute("seeAll",seeAll);
+        model.addAttribute("selectedReports",selectedReports);
         return "html-admin/lab-report-data";
     }
 
@@ -139,5 +176,26 @@ public class ManagerController {
     @GetMapping(value = "/addMember")
     public String addMember(){
         return "html-admin/add-member";
+    }
+
+    @PostMapping(path = "/addUser")
+    public String addUser(@RequestParam("account")String account,
+                          @RequestParam("name")String name,
+                          @RequestParam(value = "class",defaultValue = "")String classname,
+                          @RequestParam(value = "academy",defaultValue = "")String academy){
+        if(account.charAt(0) == 'U'&&account.length() == 10){
+            Student student = new Student();
+            student.setStuId(account);
+            student.setClassname(classname);
+            student.setAcademy(academy);
+            student.setName(name);
+            studentService.addStudent(student);
+            studentService.registerStudent(student);
+        }else {
+            userService.register(account,"123456","123456");
+            User user = userService.getUserbyAccount(account);
+            userService.updateUserMessage(account,user.getUrl(),name,classname,academy,account);
+        }
+        return "redirect:/userManage";
     }
 }

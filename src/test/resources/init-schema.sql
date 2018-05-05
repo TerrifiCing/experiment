@@ -31,7 +31,7 @@ CREATE TABLE `report` (
   `score` varchar(20) DEFAULT NULL,
   `report_url` varchar(200) DEFAULT NULL,
   `data_url` varchar(200) DEFAULT NULL,
-  `status` int(8) DEFAULT NULL,
+  `status` int(8) DEFAULT 0,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -44,6 +44,7 @@ CREATE TABLE `mail` (
   `from_id` int(8) NOT NULL,
   `to_id` int(8) DEFAULT NULL,
   `title` VARCHAR (30),
+  `about` VARCHAR (30),
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
 
@@ -64,6 +65,7 @@ CREATE TABLE `exp` (
   `period` int(8) DEFAULT NULL,
   `teacher_id` int(8) DEFAULT NULL,
   `credit` FLOAT  DEFAULT NULL,
+  `semester` varchar(30) NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
 

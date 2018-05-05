@@ -17,7 +17,7 @@ public class MailService {
 
     private static final Logger logger = LoggerFactory.getLogger(MailService.class);
 
-    public boolean addMail(int fromId,String content,String title){
+    public boolean addMail(int fromId,String content,String title,String about){
         try{
             Mail mail = new Mail();
             mail.setTime(new Date());
@@ -25,6 +25,7 @@ public class MailService {
             mail.setFromId(fromId);
             mail.setContent(content);
             mail.setTitle(title);
+            mail.setAbout(about);
             mailDao.addMail(mail);
             return true;
         }catch (Exception e){
@@ -33,7 +34,7 @@ public class MailService {
         }
     }
 
-    public boolean addMail(int fromId,int toId,String content,String title){
+    public boolean addMail(int fromId,int toId,String content,String title,String about){
         try{
             Mail mail = new Mail();
             mail.setFromId(fromId);
@@ -42,6 +43,7 @@ public class MailService {
             mail.setType("私信");
             mail.setTime(new Date());
             mail.setTitle(title);
+            mail.setAbout(about);
             mailDao.addMail(mail);
             return true;
         }catch (Exception e){

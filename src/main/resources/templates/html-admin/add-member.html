@@ -73,29 +73,29 @@
             <div class="templatemo-content-container">
                 <div class="templatemo-content-widget white-bg">
                     <h2 class="margin-bottom-10">添加新成员</h2>
-                    <form id="addmember-form" action="member-manage.html" class="templatemo-login-form" method="post" enctype="multipart/form-data">
+                    <form id="addmember-form" action="/addUser" class="templatemo-login-form" method="post" enctype="multipart/form-data">
                         <div class="row form-group">
                             <div class="col-lg-6 col-md-6 form-group">
                                 <label for="input-ann-title">学号</label>
-                                <input type="text" class="form-control" id="input-ann-title" placeholder="请输入学号..">
+                                <input type="text" class="form-control" id="input-ann-title" name="account" placeholder="请输入学号..">
                             </div>
                             <div class="col-lg-6 col-md-6 form-group">
                                 <label for="input-ann-title">姓名</label>
-                                <input type="text" class="form-control" id="input-ann-title" placeholder="请输入姓名..">
+                                <input type="text" class="form-control" id="input-ann-title" name="name" placeholder="请输入姓名..">
                             </div>
                         </div>
                         <div class="row form-group">
                             <div class="col-lg-6 col-md-6 form-group">
                                 <label for="input-ann-title">班级</label>
-                                <input type="text" class="form-control" id="input-ann-title" placeholder="请输入班级..">
+                                <input type="text" class="form-control" id="input-ann-title" name="class" placeholder="请输入班级..">
                             </div>
                             <div class="col-lg-6 col-md-6 form-group">
                                 <label for="input-ann-title">学院</label>
-                                <input type="text" class="form-control" id="input-ann-title" placeholder="请输入学院..">
+                                <input type="text" class="form-control" id="input-ann-title" name="academy" placeholder="请输入学院..">
                             </div>
                         </div>
                         <div class="form-group text-right">
-                            <button id='release-announcement' type="button" class="templatemo-blue-button">添加</button>
+                            <button id='release-announcement' type="submit" class="templatemo-blue-button">添加</button>
                             <button type="reset" class="templatemo-white-button">重置</button>
                         </div>
                     </form>

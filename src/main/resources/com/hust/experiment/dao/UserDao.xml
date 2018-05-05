@@ -22,4 +22,16 @@
         FROM
         <include refid="table"/>
     </select>
+    <select id="selectAllAcademy" resultType="String">
+        SELECT
+        DISTINCT academy
+        FROM
+        <include refid="table"/>
+    </select>
+    <select id="selectAllClass" resultType="String">
+        SELECT
+        DISTINCT classname
+        FROM
+        <include refid="table"/>
+    </select>
 </mapper>

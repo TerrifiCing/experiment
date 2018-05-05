@@ -1,25 +1,25 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.hust.experiment.dao.ExpDao">
-    <sql id="table">exp</sql>
-    <sql id="selectFields">id, exp_name, period, teacher_id, credit, semester
+<mapper namespace="com.hust.experiment.dao.ReportDao">
+    <sql id="table">report</sql>
+    <sql id="selectFields">id, student_id, course_id, score, report_url, data_url, status
     </sql>
-    <select id="getAllExperiment" resultType= "com.hust.experiment.model.Exp">
+    <select id="getAllReports" resultType= "com.hust.experiment.model.Report">
         SELECT
         <include refid="selectFields"/>
         FROM
         <include refid="table"/>
     </select>
-    <select id="selectAllSemester" resultType= "String">
+    <select id="selectAllCourseId" resultType= "Integer">
         SELECT
-        DISTINCT semester
+        DISTINCT course_id
         FROM
         <include refid="table"/>
     </select>
-    <select id="selectAllTeacher" resultType= "Integer">
+    <select id="selectAllStudentId" resultType= "Integer">
         SELECT
-        DISTINCT teacher_id
+        DISTINCT student_id
         FROM
         <include refid="table"/>
     </select>

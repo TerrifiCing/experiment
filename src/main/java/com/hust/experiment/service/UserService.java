@@ -110,6 +110,37 @@ public class UserService {
         return map;
     }
 
+    public List<User> getUserByParams(String accountParam,String accademyParam,String classParam){
+        List<User> list = new ArrayList<>();
+        if(!accountParam.equals("")){
+            if(accountParam.length() == 10&&hasUser(accountParam)){
+                    list.add(userDao.selectByAccount(accountParam));
+            }else {
+                char head = accountParam.toUpperCase().charAt(0);
+                if(head == 'M'){
+                    list.addAll(userDao.selectByPosition("管理员"));
+                }else if(head == 'T'){
+                    list.addAll(userDao.selectByPosition("教师"));
+                }else if(head == 'U'){
+                    list.addAll(userDao.selectByPosition("学生"));
+                }
+            }
+        }
+        if(!accademyParam.equals("")){
+            List<User> findList = userDao.selectByAcademy(accademyParam);
+            if(findList != null&&!findList.isEmpty()){
+                list.addAll(findList);
+            }
+        }
+        if(!classParam.equals("")){
+            List<User> findList2 = userDao.selectByClass(classParam);
+            if(findList2 != null&&!findList2.isEmpty()){
+                list.addAll(findList2);
+            }
+        }
+        return list;
+    }
+
     public User getUserbyAccount(String account){
         return userDao.selectByAccount(account);
     }
@@ -121,7 +152,6 @@ public class UserService {
     public boolean deleteUser(String account){
         User user = userDao.selectByAccount(account);
         userDao.deleteUserById(user.getId());
-
         return userDao.selectByAccount(account) == null;
     }
 
@@ -182,4 +212,23 @@ public class UserService {
     public List<User> selectUserByAcademy(String academy){
         return userDao.selectByAcademy(academy);
     }
+
+    public List<User> selectUserByPosition(String position){return userDao.selectByPosition(position);}
+
+    public List<User> selectTeacherByName(String teacherName){
+        List<User> list = new ArrayList<>();
+        if(!userDao.selectByName(teacherName).isEmpty()){
+            list.addAll(userDao.selectByName(teacherName));
+        }
+        return list;
+    }
+
+    public List<String> getAllAcademy(){
+        return userDao.selectAllAcademy();
+    }
+
+    public List<String> getAllClass(){
+        return userDao.selectAllClass();
+    }
+
 }
