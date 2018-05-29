@@ -1,12 +1,7 @@
 package com.hust.experiment.controller;
 
-import com.hust.experiment.model.Exp;
-import com.hust.experiment.model.Mail;
-import com.hust.experiment.model.User;
-import com.hust.experiment.model.ViewObject;
-import com.hust.experiment.service.MailService;
-import com.hust.experiment.service.StudentService;
-import com.hust.experiment.service.UserService;
+import com.hust.experiment.model.*;
+import com.hust.experiment.service.*;
 import com.hust.experiment.util.ExperimentUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,13 +29,31 @@ public class UserController {
     @Autowired
     MailService mailService;
 
+    @Autowired
+    ReportService reportService;
+
+    @Autowired
+    CourseService courseService;
+
+    @Autowired
+    ExpService expService;
     //查
     @GetMapping(path = "/{account}/userCenter")
-    public String userCenter(Model model,@PathVariable("account") String account){
+    public String userCenter(@PathVariable("account") String account,
+                             @RequestParam(value = "change",defaultValue = "0")Integer change,
+                             Model model){
         Map<String ,Object> map = new HashMap<>();
+        model.addAttribute("change",change);
         try{
             if(userService.hasUser(account)){
-                return "personal-center";
+                if(account.charAt(0) == 'M'){
+                    return "html-admin/personal-center";
+                }else if(account.charAt(0) == 'U'){
+                    return "html-student/personal-center";
+                }else {
+                    return "html-teacher/personal-center";
+                }
+
             }else{
                 map.put("msgAccount","账户不存在");
                 return ExperimentUtil.getJSONString(1,map);
@@ -55,15 +68,14 @@ public class UserController {
     @PostMapping(path = "/user/update")
     @ResponseBody
     public String updateUser(@RequestParam(value = "account") String account,
-                             @RequestParam(value = "url") String url,
                              @RequestParam(value = "name") String name,
-                             @RequestParam(value = "classname") String classname,
-                             @RequestParam(value = "academy") String academy,
+                             @RequestParam(value = "classname",defaultValue = "") String classname,
+                             @RequestParam(value = "academy",defaultValue = "") String academy,
                              @RequestParam(value = "nickname") String nickname){
         Map<String,Object> map = new HashMap<>();
         try{
             if(userService.hasUser(account)){
-                userService.updateUserMessage(account,url,name,classname,academy,nickname);
+                userService.updateUserMessage(account,userService.getUserbyAccount(account).getUrl(),name,classname,academy,nickname);
                 map.put("msgUpdate","更新成功");
                 return ExperimentUtil.getJSONString(0,map);
             }else{
@@ -110,48 +122,63 @@ public class UserController {
         model.addAttribute("mailVos",vos);
         char c = account.charAt(0);
         if(c == 'U'){
-            return "stu_index";
+            return "html-student/broad-manage";
         }else if(c == 'T'){
-            return "tea_index";
+            return "html-teacher/broad-manage";
         }else {
-            return "/html-admin/broad-manage";
+            return "html-admin/broad-manage";
         }
     }
 
-    @RequestMapping(path = "/changePassword",method = {RequestMethod.GET,RequestMethod.POST})
-    public String changePassword(Model model){
-        return "html-admin/change-pwd";
-    }
-
-    @PostMapping(path = "{account}/changePwd")
-    public String changPwd(@PathVariable("account")String account, @RequestParam("oldPass") String oldPass,
-                           @RequestParam("newPass")String newPass, @RequestParam("rePass")String rePass){
+    @RequestMapping(path = "{account}/changePassword",method = {RequestMethod.GET,RequestMethod.POST})
+    public String changePassword(@PathVariable("account") String account){
         User user = userService.getUserbyAccount(account);
-        Map<String ,Object> map =new HashMap<>();
-        if(oldPass.equals("")||oldPass == null||newPass.equals("")||newPass == null||rePass.equals("")||rePass == null){
-            map.put("codeMsg","密码不能为空!");
-            return ExperimentUtil.getJSONString(1,map);
-        }else if(!ExperimentUtil.MD5(oldPass + user.getSalt()).equals(user.getPassword())){
-            map.put("codeMsg","原密码不正确!");
-            return ExperimentUtil.getJSONString(1,map);
-        }else if(!newPass.equals(rePass)){
-            map.put("codeMsg","两次输入的新密码不相等！");
-            return ExperimentUtil.getJSONString(1,map);
+        if(user.getAccount().charAt(0) == 'M'){
+            return "html-admin/change-pwd";
+        }else if(user.getAccount().charAt(0) == 'U'){
+            return "html-student/change-pwd";
         }else {
-            userService.updatePassword(newPass,user.getId());
-            return ExperimentUtil.getJSONString(0,"密码修改成功！");
+            return "html-teacher/change-pwd";
         }
+
+    }
+
+    @PostMapping(path = "/checkOldPassword")
+    @ResponseBody
+    public String checkOldPassword(@RequestParam("oldPassword")String oldPass,@RequestParam("account")String account){
+        User user = userService.getUserbyAccount(account);
+        if(ExperimentUtil.MD5(oldPass + user.getSalt()).equals(user.getPassword())){
+            return ExperimentUtil.getJSONString(0,"正确");
+        }else {
+            return ExperimentUtil.getJSONString(1,"错误");
+        }
+    }
+
+    @PostMapping(path = "/changePassword")
+    @ResponseBody
+    public String changePassword(@RequestParam("newPassword")String newPassword,@RequestParam("account")String account){
+        User user = userService.getUserbyAccount(account);
+        userService.updatePassword(newPassword,user.getId());
+        return ExperimentUtil.getJSONString(0,"修改成功");
     }
 
 
     @RequestMapping(path = "/uploadFile",method = RequestMethod.POST)
     @ResponseBody
-    public String upload(@RequestParam("file")MultipartFile file){
+    public String upload(@RequestParam("file")MultipartFile file,@RequestParam("account")String account,
+                         @RequestParam("courseId")Integer courseId){
         try{
             String fileUrl = userService.saveFile(file);
             if(fileUrl == null){
                 return ExperimentUtil.getJSONString(1,"上传失败");
             }
+            Report report = new Report();
+            report.setStatus(0);
+            report.setStudentId(userService.getUserbyAccount(account).getId());
+            report.setDataUrl("");
+            report.setReportUrl(fileUrl);
+            report.setCourseId(courseId);
+            reportService.addReport(report);
             return ExperimentUtil.getJSONString(0,fileUrl);
         }catch (Exception e){
             logger.error("上传失败" + e.getMessage());
@@ -163,15 +190,49 @@ public class UserController {
     @ResponseBody
     public void getFile(@RequestParam("name")String fileName, HttpServletResponse httpServletResponse){
         try{
-            httpServletResponse.setContentType("file");
+            httpServletResponse.setContentType("application/pdf");
+            httpServletResponse.setHeader("Content-Disposition", "inline; filename="+fileName);
             StreamUtils.copy(new FileInputStream(ExperimentUtil.FILE_DIR + fileName),httpServletResponse.getOutputStream());
         }catch (Exception e){
             logger.error("读取文件错误!" + e.getMessage());
         }
     }
 
-    @GetMapping(path = "/viewReport")
-    public String viewReport(){
-        return "html-admin/view-report";
+    @RequestMapping(path = "/downloadFile" ,method = RequestMethod.GET)
+    @ResponseBody
+    public void downloadFile(@RequestParam("name")String fileName, HttpServletResponse httpServletResponse){
+        try{
+            httpServletResponse.setContentType("application/octet-stream");
+            httpServletResponse.setHeader("Content-Disposition", "attachment; filename="+fileName);
+            StreamUtils.copy(new FileInputStream(ExperimentUtil.FILE_DIR + fileName),httpServletResponse.getOutputStream());
+        }catch (Exception e){
+            logger.error("读取文件错误!" + e.getMessage());
+        }
+    }
+
+    @GetMapping(path = "/{account}/viewReport")
+    public String viewReport(Model model,@RequestParam("reportId")Integer reportId,
+                             @PathVariable("account")String account){
+        ViewObject vo = new ViewObject();
+        Report report = reportService.findById(reportId);
+        vo.set("report",report);
+        vo.set("student",userService.getUserById(report.getStudentId()));
+        vo.set("course",courseService.getCourseById(report.getCourseId()));
+        vo.set("exp",expService.getExpById(courseService.getCourseById(report.getCourseId()).getExpId()));
+        vo.set("teacher",userService.getUserById(expService.getExpById(courseService.getCourseById(report.getCourseId()).getExpId()).getTeacherId()));
+        model.addAttribute("reportVo",vo);
+
+        if(userService.getUserbyAccount(account).getPosition().equals("教师")){
+            return "html-teacher/view-report";
+        }else if(userService.getUserbyAccount(account).getPosition().equals("管理员")){
+            return "html-admin/view-report";
+        }else {
+            return "html-student/view-report";
+        }
+    }
+
+    @GetMapping(path = "/{account}/attendance")
+    public String attendance(@PathVariable("account")String account){
+        return "html-teacher/student-attendance";
     }
 }

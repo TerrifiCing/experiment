@@ -1,14 +1,13 @@
 package com.hust.experiment;
 
-import com.hust.experiment.dao.ExpDao;
-import com.hust.experiment.dao.MailDao;
-import com.hust.experiment.dao.ReportDao;
-import com.hust.experiment.dao.UserDao;
+import com.hust.experiment.dao.*;
 import com.hust.experiment.model.Exp;
 import com.hust.experiment.model.Mail;
 import com.hust.experiment.model.User;
 import com.hust.experiment.service.MailService;
+import com.hust.experiment.service.ReportService;
 import com.hust.experiment.service.UserService;
+import com.hust.experiment.util.JedisAdapter;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,6 +37,15 @@ public class UserTests {
 
     @Autowired
     ReportDao reportDao;
+
+    @Autowired
+    CourseDao courseDao;
+
+    @Autowired
+    ReportService reportService;
+
+    @Autowired
+    JedisAdapter jedisAdapter;
 
     @Test
     public void test1(){
@@ -104,7 +112,7 @@ public class UserTests {
 
     @Test
     public void test4396(){
-        reportDao.getAllReports();
-        reportDao.selectAllCourseId();
+        reportService.updateScore(1,"90");
     }
+
 }

@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<body>
+<div th:fragment="link">
+    <meta charset="utf-8" />
+    <title>华科实验系统</title>
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:400,300,400italic,700' rel='stylesheet' type='text/css' />
+    <link href="../css/font-awesome.min.css" rel="stylesheet" />
+    <link href="../css/bootstrap.css" rel="stylesheet">
+    <link href="../css/bootstrap.min.css" rel="stylesheet" />
+    <link href="../css/templatemo-style.css" rel="stylesheet" />
+    <link href="../css/main.css" rel="stylesheet">
+    <link href="https://rawgit.com/indrimuska/jquery-editable-select/master/src/jquery-editable-select.css" rel="stylesheet" />
+    <link href="../css/jquery.editable-select.min.css" rel="stylesheet">
+    <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+    <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+</div>
+
+<div th:fragment="footer" class="text-right">
+    <p>footer Designed By<a href="" target="_parent"></a></p>
+</div>
+
+<div th:fragment="left">
+    <div class="templatemo-sidebar">
+        <header class="templatemo-site-header">
+            <div class="square"></div>
+            <h1>HUST LAB</h1>
+        </header>
+        <div class="profile-photo-container">
+            <img src="../images/profile-photo.jpg" alt="Profile Photo" class="img-responsive" />
+            <div class="profile-photo-overlay"></div>
+        </div>
+        <div class="mobile-menu-icon">
+            <i class="fa fa-bars"></i>
+        </div>
+        <nav class="templatemo-left-nav">
+            <ul>
+                <li><a th:href="@{/{account}/announcement (account=${user.account})}"><i class="fa fa-map-marker fa-fw"></i>公告栏</a></li>
+                <li><a th:href="@{/{account}/userCenter (account=${user.account})}" ><i class="fa fa-home fa-fw"></i>个人中心</a></li>
+                <!--<li><a th:href="@{/{account}/attendance (account=${user.account})}"><i class="fa fa-users fa-fw"></i>学生出勤管理</a></li>-->
+                <li><a th:href="@{/{account}/courseManage (account=${user.account})}"><i class="fa fa-database fa-fw"></i>实验课程管理</a></li>
+                <li><a th:href="@{/{account}/reportManage (account=${user.account})}"><i class="fa fa-sliders fa-fw"></i>实验报告与数据管理</a></li>
+                <li><a href="/logout"><i class="fa fa-eject fa-fw"></i>登出</a></li>
+            </ul>
+        </nav>
+    </div>
+</div>
+</body>
+</html>

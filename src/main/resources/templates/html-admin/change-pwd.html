@@ -1,45 +1,12 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 
-<head>
-    <meta charset="utf-8" />
-    <title>华科实验系统</title>
-    <link href='http://fonts.googleapis.com/css?family=Open+Sans:400,300,400italic,700' rel='stylesheet' type='text/css' />
-    <link href="../css/font-awesome.min.css" rel="stylesheet" />
-    <link href="../css/bootstrap.css" rel="stylesheet">
-    <link href="../css/bootstrap.min.css" rel="stylesheet" />
-    <link href="../css/templatemo-style.css" rel="stylesheet" />
-    <link href="../css/main.css" rel="stylesheet">
-    <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
-    <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
-</head>
+<head th:replace="/html-admin/common-admin :: link"></head>
 
 <body>
     <!-- Left column -->
     <div class="templatemo-flex-row">
-        <div class="templatemo-sidebar">
-            <header class="templatemo-site-header">
-                <div class="square"></div>
-                <h1>HUST LAB</h1>
-            </header>
-            <div class="profile-photo-container">
-                <img src="../images/profile-photo.jpg" alt="Profile Photo" class="img-responsive" />
-                <div class="profile-photo-overlay"></div>
-            </div>
-            <div class="mobile-menu-icon">
-                <i class="fa fa-bars"></i>
-            </div>
-            <nav class="templatemo-left-nav">
-                <ul>
-                    <li><a th:href="@{/{account}/announcement (account=${user.account})}"><i class="fa fa-map-marker fa-fw"></i>公告栏</a></li>
-					<li><a th:href="@{/{account}/userCenter (account=${user.account})}" class="active"><i class="fa fa-home fa-fw"></i>个人中心</a></li>
-					<li><a href="/userManage"><i class="fa fa-users fa-fw"></i>成员管理</a></li>
-					<li><a href="/courseManage"><i class="fa fa-database fa-fw"></i>实验课程管理</a></li>
-					<li><a href="/reportManage"><i class="fa fa-sliders fa-fw"></i>实验报告与数据管理</a></li>
-					<li><a href="/logout"><i class="fa fa-eject fa-fw"></i>登出</a></li>
-                </ul>
-            </nav>
-        </div>
+        <div th:replace="/html-admin/common-admin :: left"></div>
         <!-- Main content -->
         <div class="templatemo-content col-1 light-gray-bg">
             <div class="templatemo-top-nav-container">
@@ -47,19 +14,20 @@
                     <nav class="templatemo-top-nav col-lg-12 col-md-12">
                         <ul class="text-uppercase">
                             <li><h2><a th:href="@{/{account}/userCenter (account=${user.account})}" >个人信息</a></h2></li>
-							<li><h2><a href="/changePassword" class="active">修改密码</a></h2></li>
+							<li><h2><a th:href="@{/{account}/changePassword (account=${user.account})}" class="active">修改密码</a></h2></li>
                             <div style="float: right">
                                 <li>
                                     <div class="dropdown">
                                         <img id="avatar-img" src="../images/sunset.jpg" th:src="${user.url}" alt="头像">
                                         <div class="dropdown-content">
                                             <a th:href="@{/{account}/userCenter (account=${user.account})}">个人主页</a>
-											<a href="/changePassword">修改密码</a>
+                                            <a th:href="@{/{account}/changePassword (account=${user.account})}">修改密码</a>
 											<a href="/logout">退出登录</a>
                                         </div>
                                     </div>
                                 </li>
                                 <li style="font-family: 微软雅黑" th:text="'&nbsp; ' + ${user.nickname}+'，欢迎回来！'">U201513315，欢迎回来！</li>
+                                <p th:value="${user.account}" id="account"></p>
                             </div>
                         </ul>
                     </nav>
@@ -67,25 +35,25 @@
             </div>
             <div class="templatemo-content-container">
                 <div class="templatemo-content-widget templatemo-login-widget white-bg ">
-                    <form th:action="@{/{account}/changePwd (account=${user.account})}" class="templatemo-login-form">
+                    <form method="post" class="templatemo-login-form">
                         <div class="form-group">
                             <div class="input-group">
                                 <div class="input-group-addon"><i class="fa fa-key fa-fw"></i></div>
-                                <input type="password" class="form-control" id="oldpassword" name="oldpassword" placeholder="请输入原密码">
+                                <input type="password" class="form-control" id="oldpassword" placeholder="请输入原密码">
                                 <div style="display: inline" id="tip1"></div>
                             </div>
                         </div>
                         <div class="form-group">
                             <div class="input-group">
                                 <div class="input-group-addon"><i class="fa fa-key fa-fw"></i></div>
-                                <input type="password" id="password1" name="password1" class="form-control" placeholder="请输入新密码">
+                                <input type="password" id="password1" class="form-control" placeholder="请输入新密码">
                                 <div style="display: inline" id="tip2"></div>
                             </div>
                         </div>
                         <div class="form-group">
                             <div class="input-group">
                                 <div class="input-group-addon"><i class="fa fa-key fa-fw"></i></div>
-                                <input type="password" id="password2" name="password2" class="form-control" placeholder="请再次输入新密码">
+                                <input type="password" id="password2" class="form-control" placeholder="请再次输入新密码">
                                 <div style="display: inline" id="tip3"></div>
                             </div>
                         </div>
@@ -98,15 +66,95 @@
                 </div>
                 <!-- Second row ends -->
             </div>
-            <footer class="text-right">
-                <p>Copyright &copy; 2018 Company Name | Designed by <a href="http://www.templatemo.com" target="_parent">templatemo</a></p>
-            </footer>
+            <footer th:replace="/html-admin/common-admin :: footer"></footer>
         </div>
     </div>
     <!-- JS -->
     <script src="../js/jquery.js"></script>
-    <!-- jQuery 3.3.1-->
     <script src="../js/main.js"></script>
+    <script>
+        //修改密码
+        $("#oldpassword").blur(function () {
+            var url = "/checkOldPassword?";
+            var old = $("#oldpassword").val();
+            var account = $("#account").attr("value");
+            $.ajax({
+                url:url+"account="+account+"&oldPassword="+old,
+                type: "post",
+                success: function (e) {
+                    var result = JSON.parse(e);
+                    if (result.code === 0) {
+                        $("#tip1").html("<font color=\"green\" size=\"2\"> 正确</font>");
+                    } else {
+                        $("#tip1").html("<font color=\"red\" size=\"2\">  错误</font>");
+                    }
+                }
+            });
+        });
+        $("#password1").blur(function () {
+            var num = $("#password1").val().length;
+            if (num < 6) {
+                $("#tip2").html("<font color=\"red\" size=\"2\">  密码太短，不应少于6个字符</font>");
+            } else if (num > 18) {
+                $("#tip2").html("<font color=\"red\" size=\"2\">  密码太长，不应多于18个字符</font>");
+            } else {
+                $("#tip2").html("<font color=\"green\" size=\"2\"> 正确</font>");
+            }
+        });
+        $("#password2").blur(function () {
+            var tmp = $("#password1").val();
+            var num = $("#password2").val().length;
+            if ($("#password2").val() != tmp) {
+                $("#tip3").html("<font color=\"red\" size=\"2\">  错误</font>");
+            } else {
+                if (num >= 6 && num <= 18) {
+                    $("#tip3").html("<font color=\"green\" size=\"2\">  正确</font>");
+                } else {
+                    $("#tip3").html("<font color=\"red\" size=\"2\">  无效</font>");
+                }
+            }
+        });
+        $("#btn").click(function () {
+            var flag = false;
+            var old = $("#oldpassword").val();
+            var pass = $("#password1").val();
+            var pass2 = $("#password2").val();
+            var num1 = $("#password1").val().length;
+            var num2 = $("#password2").val().length;
+            if (num1 != num2 || num1 < 6 || num2 < 6 || num1 > 18 || num2 > 18 || pass != pass2) {
+                flag = false;
+            } else {
+                flag = true;
+            }
+            if (flag) {
+                var account = $("#account").attr("value");
+                $.ajax({
+                    url: "/changePassword?newPassword="+pass2+"&account="+account,
+                    type: "post",
+                    success: function (e) {
+                        var result = JSON.parse(e);
+                        if (result.code == 0) {
+                            $("#tip4").show().html("<font color=\"green\" size=\"3\">  修改成功!</font>");
+                            $("#oldpassword").val("");
+                            $("#password1").val("");
+                            $("#password2").val("");
+                            $("#tip1").empty();
+                            $("#tip2").empty();
+                            $("#tip3").empty();
+                            $("#tip4").delay(2000).hide(0);
+                        } else {
+                            $("#tip4").show().html("<font color=\"red\" size=\"3\">  原密码输入错误!</font>");
+                        }
+                    }
+                });
+            } else {
+
+                $("#tip4").show().html("<font color=\"red\" size=\"3\"> 旧密码不正确或新密码格式不对!</font>");
+            }
+        });
+
+
+    </script>
 </body>
 
 </html>

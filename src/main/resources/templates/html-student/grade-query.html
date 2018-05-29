@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="/html-student/common-student :: link"></head>
+
+<body>
+  <!-- Left column -->
+  <div class="templatemo-flex-row">
+    <div th:replace="/html-student/common-student :: left"></div>
+    <!-- Main content -->
+    <div class="templatemo-content col-1 light-gray-bg">
+      <div class="templatemo-top-nav-container">
+        <div class="row">
+          <nav class="templatemo-top-nav col-lg-12 col-md-12">
+            <ul class="text-uppercase">
+              <li>
+                <h2><a href="#" class="active">Grades</a></h2>
+              </li>
+              <div style="float: right">
+                <li>
+                  <div class="dropdown">
+                    <img id="avatar-img" src="../images/sunset.jpg" th:src="${user.url}" alt="头像">
+                    <div class="dropdown-content">
+                      <a th:href="@{/{account}/userCenter (account=${user.account})}">个人主页</a>
+                      <a th:href="@{/{account}/changePassword (account=${user.account})}">修改密码</a>
+                      <a href="/logout">退出登录</a>
+                    </div>
+                  </div>
+                </li>
+                <li style="font-family: 微软雅黑" th:text="'&nbsp; ' + ${user.nickname}+'，欢迎回来！'">U201513315，欢迎回来！</li>
+                <p th:value="${user.account}" id="account"></p>
+              </div>
+            </ul>
+          </nav>
+        </div>
+      </div>
+      <div class="templatemo-content-container">
+        <div class="templatemo-content-widget no-padding">
+          <div class="templatemo-content-widget white-bg ">
+            <div class="row form-group">
+              <div class="col-lg-3 col-md-3 form-group">
+                <label>学年学期</label>
+                <select class="form-control shift-info" id="param1">
+                  <tr th:each="semester : ${semesters}">
+                    <td>
+                      <option value="" th:text="${semester}">类型1</option>
+                    </td>
+                  </tr>
+                </select>
+              </div>
+              <div class="col-lg-3 col-md-3 form-group">
+                <label>课程名</label>
+                <select class="form-control shift-info" id="param2">
+                  <tr th:each="expN : ${expNames}">
+                    <td>
+                      <option value="" th:text="${expN.expName}">类型1</option>
+                    </td>
+                  </tr>
+                </select>
+              </div>
+              <div class="col-lg-3 col-md-3 form-group">
+                <button class="templatemo-edit-btn" id="search-btn" type="button">搜索</button>
+                <button class="templatemo-edit-btn" type="button" onclick="f()">全部</button>
+              </div>
+            </div>
+            <div th:if="${seeAll != 1}">
+              <label th:if="${selected == null}" style="font-size: 15px">没有查询到任何结果，请尝试更换关键词！</label>
+            </div>
+          </div>
+          <div class="panel panel-default table-responsive">
+            <table class="table table-striped table-bordered templatemo-user-table">
+              <thead>
+                <tr>
+                  <td><a class="white-text templatemo-sort-by">实验名 <span class="caret"></span></a></td>
+                  <td><a class="white-text templatemo-sort-by">实验时间 <span class="caret"></span></a></td>
+                  <td><a class="white-text templatemo-sort-by">实验地点 <span class="caret"></span></a></td>
+                  <td><a class="white-text templatemo-sort-by">任课老师 <span class="caret"></span></a></td>
+                  <td><a class="white-text templatemo-sort-by">得分 <span class="caret"></span></a></td>
+                  <td><a class="white-text templatemo-sort-by">状态 <span class="caret"></span></a></td>
+                </tr>
+              </thead>
+              <tbody>
+              <div th:if="${seeAll == 1}">
+              <div th:if="${selected == null}">
+                <tr th:each="report : ${allReports}">
+                  <td th:text="${report.get('exp').expName}">模电</td>
+                  <td th:text="${#dates.format(report.get('course').classTime, 'yyyy-MM-dd HH:mm')}">周三晚</td>
+                  <td th:text="${report.get('course').classroom}">南一楼</td>
+                  <td th:text="${report.get('teacher').name}">张老师</td>
+                  <td th:text="${report.get('report').score}">80</td>
+                  <td th:if="${report.get('report').status == 1}">已评分</td>
+                  <td th:if="${report.get('report').status != 1}">未评分</td>
+                </tr>
+              </div>
+              </div>
+              <div th:if="${selected != null}">
+                <tr th:each="report : ${selectedVos}">
+                  <td th:text="${report.get('exp').expName}">模电</td>
+                  <td th:text="${#dates.format(report.get('course').classTime, 'yyyy-MM-dd HH:mm')}">周三晚</td>
+                  <td th:text="${report.get('course').classroom}">南一楼</td>
+                  <td th:text="${report.get('teacher').name}">张老师</td>
+                  <td th:text="${report.get('report').score}">80</td>
+                  <td th:if="${report.get('report').status == 1}">已评分</td>
+                  <td th:if="${report.get('report').status != 1}">未评分</td>
+                </tr>
+              </div>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      </div>
+      <footer th:replace="/html-student/common-student :: footer"></footer>
+    </div>
+  </div>
+  </div>
+  <!-- JS -->
+  <script src="../js/jquery.js"></script>
+  <script src="../js/main.js"></script>
+  <script src="https://rawgit.com/indrimuska/jquery-editable-select/master/src/jquery-editable-select.js"></script>
+  <script src="../js/edittableSelect.js"></script>
+  <script>
+     function f(){
+         var account = $("#account").attr("value");
+         var url = "/gradeQuery";
+         window.location.href = "/"+account+url;
+    }
+
+     $("#search-btn").on("click",function () {
+         var account = $("#account").attr("value");
+         var url = "/"+account+"/gradeQuery?seeAll=0";
+         var semester = $('#param1').val();
+         var expName = $('#param2').val();
+         if(semester !== ""){
+             url = url + "&param1="+semester;
+         }
+         if(expName !== ""){
+             url = url + "&param2="+expName;
+         }
+         $.ajax({
+             type:"post",
+             url:url,
+             success:function () {
+                 window.location.href=url;
+             }
+         });
+     });
+  </script>
+</body>
+
+</html>

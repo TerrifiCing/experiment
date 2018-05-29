@@ -4,9 +4,11 @@ package com.hust.experiment.service;
 import com.hust.experiment.dao.ExpDao;
 import com.hust.experiment.dao.ReportDao;
 import com.hust.experiment.model.*;
+import com.sun.org.apache.regexp.internal.RE;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.awt.image.RescaleOp;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -59,7 +61,10 @@ public class ReportService {
             ViewObject vo = new ViewObject();
             vo.set("report",report);
             vo.set("student",userService.getUserById(report.getStudentId()));
+            vo.set("course",courseService.getCourseById(report.getCourseId()));
             vo.set("exp",expService.getExpById(courseService.getCourseById(report.getCourseId()).getExpId()));
+            User user = userService.getUserById(expService.getExpById(courseService.getCourseById(report.getCourseId()).getExpId()).getTeacherId());
+            vo.set("teacher",user);
             vos.add(vo);
         }
         return vos;
@@ -136,5 +141,59 @@ public class ReportService {
             list.addAll(findByCourseId(course.getId()));
         }
         return list;
+    }
+
+    public void updateScore(int reportId,String score){
+        Report report = reportDao.selectReportById(reportId);
+        report.setScore(score);
+        reportDao.updateScore(report);
+    }
+
+    public List<Report> getReportsForStudent(String account,String semester,String expName){
+        List<Report> list = new ArrayList<>();
+        if(findByAccount(account).isEmpty()){
+            return list;
+        }
+        if(!semester.equals("")){
+            list.addAll(getReportsBySemesterForStudent(semester,account));
+        }
+        if(!expName.equals("")){
+            list.addAll(getReportByExpNameForStiudent(expName,account));
+        }
+        return list;
+    }
+
+    public List<Report> getReportByExpNameForStiudent(String expName,String account){
+        List<Report> reports = new ArrayList<>();
+        for(Report report : findByAccount(account)){
+            if(expService.getExpById(courseService.getCourseById(report.getCourseId()).getExpId()).getExpName().equals(expName)){
+                reports.add(report);
+            }
+        }
+        return reports;
+    }
+
+    public List<Report> getReportsBySemesterForStudent(String semester,String account){
+        List<Report> reports = new ArrayList<>();
+        for(Report report : findByAccount(account)){
+            if(expService.getExpById(courseService.getCourseById(report.getCourseId()).getExpId()).getSemester().equals(semester)){
+                reports.add(report);
+            }
+        }
+        return reports;
+    }
+
+    public boolean isFinish(List<Report> list , Course course){
+        if(list.isEmpty()){
+            return false;
+        }else {
+            for(Report report : list){
+                if(report.getCourseId() == course.getId()){
+                    return true;
+                }
+            }
+        }
+
+        return false;
     }
 }

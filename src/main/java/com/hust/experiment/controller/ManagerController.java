@@ -14,9 +14,8 @@ import javax.websocket.server.PathParam;
 import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 @Controller
 public class ManagerController {
@@ -35,10 +34,17 @@ public class ManagerController {
     @Autowired
     ReportService reportService;
 
-    @RequestMapping(path = "/createAnnouncement" ,method = {RequestMethod.GET,RequestMethod.POST})
-    public String createAnnouncement(Model model){
+    @Autowired
+    CourseService courseService;
+
+    @RequestMapping(path = "/{account}/createAnnouncement" ,method = {RequestMethod.GET,RequestMethod.POST})
+    public String createAnnouncement(Model model,@PathVariable("account")String account){
         model.addAttribute("exps",expService.getAllExp());
-        return "/html-admin/create-announcement";
+        if(userService.getUserbyAccount(account).getPosition().equals("教师")){
+            return "/html-teacher/create-announcement";
+        }else {
+            return "/html-admin/create-announcement";
+        }
     }
 
     @PostMapping(path = "/addMail")
@@ -67,9 +73,10 @@ public class ManagerController {
     }
 
     @PostMapping(path = "/deleteMail")
-    public String deleteMail(@RequestParam("mailId") int id,@RequestParam("account")String account){
+    @ResponseBody
+    public String deleteMail(@RequestParam("mailId") int id){
         mailService.delete(id);
-        return "redirect:/" + account + "/announcement";
+        return "success";
     }
 
     @RequestMapping(path = "/userManage" ,method = {RequestMethod.GET,RequestMethod.POST})
@@ -92,11 +99,12 @@ public class ManagerController {
         return "/html-admin/member-manage";
     }
 
-    @RequestMapping(path = "/courseManage" ,method = {RequestMethod.GET,RequestMethod.POST})
+    @RequestMapping(path = "/{account}/courseManage" ,method = {RequestMethod.GET,RequestMethod.POST})
     public String courseManage(Model model,@RequestParam(value = "param1",defaultValue = "")String semesterParam,
                                @RequestParam(value = "param2",defaultValue = "")String expParam,
                                @RequestParam(value = "param3",defaultValue = "")String teacherParam,
-                               @RequestParam(value = "seeAll",defaultValue = "1")Integer seeAll){
+                               @RequestParam(value = "seeAll",defaultValue = "1")Integer seeAll,
+                               @PathVariable("account")String account){
         List<Exp> list = expService.getAllExp();
         model.addAttribute("vos",expService.getExpViewObjects(list));
         model.addAttribute("teachers",expService.getAllTeacher());
@@ -111,20 +119,25 @@ public class ManagerController {
         }
         model.addAttribute("seeAll",seeAll);
         model.addAttribute("selectedExps",selectExp);
-        return "/html-admin/lab-course";
+        if(userService.getUserbyAccount(account).getPosition().equals("教师")){
+            return "/html-teacher/lab-course";
+        }else {
+            return "/html-admin/lab-course";
+        }
     }
 
-    @RequestMapping(path = "/reportManage" ,method = {RequestMethod.GET,RequestMethod.POST})
-    public String reportManage(Model model,@RequestParam(value = "param1",defaultValue = "")String account,
+    @RequestMapping(path = "/{account}/reportManage" ,method = {RequestMethod.GET,RequestMethod.POST})
+    public String reportManage(Model model,@RequestParam(value = "param1",defaultValue = "")String account1,
                                @RequestParam(value = "param2",defaultValue = "")String accademy,
                                @RequestParam(value = "param3",defaultValue = "")String expName,
-                               @RequestParam(value = "seeAll",defaultValue = "1")Integer seeAll){
+                               @RequestParam(value = "seeAll",defaultValue = "1")Integer seeAll,
+                               @PathVariable("account")String account){
         model.addAttribute("allVos",reportService.getReportViewObjects(reportService.getAllReports()));
         model.addAttribute("exps",reportService.getAllExpOfReport());
         model.addAttribute("academies",reportService.getAllAcademiesOfReport());
         List<Report> selectedReports = null;
         if(seeAll != 1){
-            List<Report> tempList = reportService.getReportsByParams(account,accademy,expName);
+            List<Report> tempList = reportService.getReportsByParams(account1,accademy,expName);
             if(!tempList.isEmpty()){
                 selectedReports = tempList;
                 model.addAttribute("selectedVos",reportService.getReportViewObjects(selectedReports));
@@ -132,7 +145,12 @@ public class ManagerController {
         }
         model.addAttribute("seeAll",seeAll);
         model.addAttribute("selectedReports",selectedReports);
-        return "html-admin/lab-report-data";
+
+        if(userService.getUserbyAccount(account).getPosition().equals("教师")){
+            return "/html-teacher/lab-report-data";
+        }else {
+            return "html-admin/lab-report-data";
+        }
     }
 
 
@@ -168,21 +186,23 @@ public class ManagerController {
         }
     }
 
-    @GetMapping(path = "/import")
-    public String importStudent(){
-        return "import_student_info";
-    }
+    @GetMapping(value = "/{account}/addMember")
+    public String addMember(@PathVariable("account")String account){
+        if(userService.getUserbyAccount(account).getPosition().equals("教师")){
+            return "/html-teacher/add-member";
+        }else {
+            return "html-admin/add-member";
+        }
 
-    @GetMapping(value = "/addMember")
-    public String addMember(){
-        return "html-admin/add-member";
     }
 
     @PostMapping(path = "/addUser")
+    @ResponseBody
     public String addUser(@RequestParam("account")String account,
                           @RequestParam("name")String name,
                           @RequestParam(value = "class",defaultValue = "")String classname,
                           @RequestParam(value = "academy",defaultValue = "")String academy){
+
         if(account.charAt(0) == 'U'&&account.length() == 10){
             Student student = new Student();
             student.setStuId(account);
@@ -196,6 +216,100 @@ public class ManagerController {
             User user = userService.getUserbyAccount(account);
             userService.updateUserMessage(account,user.getUrl(),name,classname,academy,account);
         }
-        return "redirect:/userManage";
+        User user = userService.getUserbyAccount(account);
+        Map<String,Object> map = new HashMap<>();
+        map.put("account",user.getAccount());
+        map.put("name",user.getName());
+        return ExperimentUtil.getJSONString(0,map);
+    }
+
+    @RequestMapping(path = "/addExp",method = {RequestMethod.GET,RequestMethod.POST})
+    @ResponseBody
+    public String addExp(@RequestParam("courseName") String courseName,@RequestParam("period")Integer period,
+                       @RequestParam("credit")double credit,@RequestParam("teacher")String teacher,
+                       @RequestParam("semester")String semester){
+        if(userService.hasUser(teacher)){
+            try{
+                expService.addExperiment(courseName,userService.getUserbyAccount(teacher).getId(),period,credit,semester);
+                return ExperimentUtil.getJSONString(0,"添加成功");
+            }catch (Exception e){
+                return ExperimentUtil.getJSONString(1,"添加失败");
+            }
+        }else {
+            return ExperimentUtil.getJSONString(1,"该教师学工号不存在");
+        }
+    }
+
+    @PostMapping(path = "/deleteExp")
+    @ResponseBody
+    public String deleteExp(@RequestParam("expId")Integer id){
+        if(expService.deleteExp(id)){
+            return ExperimentUtil.getJSONString(0,"删除成功");
+        }else {
+            return ExperimentUtil.getJSONString(1,"删除失败");
+        }
+    }
+
+    @GetMapping(path = "/{account}/viewSelectedCourse")
+    public String viewCourse(Model model,@PathVariable("account")String account){
+        List<Course> list = courseService.getAllCourse();
+        model.addAttribute("courseVos",courseService.getViewObjectsForCourse(list,"M201413407"));
+        if(userService.getUserbyAccount(account).getPosition().equals("教师")){
+            return "/html-teacher/lab-course-select";
+        }else {
+            return "html-admin/lab-course-select";
+        }
+    }
+
+    @GetMapping(path = "/{account}/releaseCourse")
+    public String releaseCourse(Model model,@PathVariable("account")String account){
+        model.addAttribute("exps",expService.getAllExp());
+
+        if(userService.getUserbyAccount(account).getPosition().equals("教师")){
+            return "html-teacher/lab-course-manage";
+        }else {
+            return "html-admin/lab-course-manage";
+        }
+    }
+
+    @PostMapping(path = "/addCourse")
+    @ResponseBody
+    public String addCourse(@RequestParam("expId")String expmesg, @RequestParam("classroom")String classroom,
+                            @RequestParam("time")String Strdate,@RequestParam("count")Integer count){
+        String msg = expmesg.replaceAll("\\s*", "");
+        int index = msg.indexOf("d");
+        int expId = Integer.valueOf(msg.substring(index + 1));
+        Course course = new Course();
+        course.setStatus(0);
+        course.setCount(count);
+        course.setExpId(expId);
+        course.setClassroom(classroom);
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm");
+        String s = Strdate.replace('T',' ');
+        try{
+            Date date = sdf.parse(s);
+            course.setClassTime(date);
+            courseService.addCourse(course);
+            return ExperimentUtil.getJSONString(0,"添加选课成功");
+        }catch (Exception e){
+            return ExperimentUtil.getJSONString(1,"添加选课失败");
+        }
+    }
+
+    @PostMapping(path = "/deleteUser")
+    @ResponseBody
+    public String deleteUser(@RequestParam("account")String account){
+        if(userService.deleteUser(account)){
+            return ExperimentUtil.getJSONString(0,"删除成功");
+        }else {
+            return ExperimentUtil.getJSONString(1,"删除失败");
+        }
+    }
+
+    @PostMapping(path = "/score")
+    @ResponseBody
+    public String score(@RequestParam("reportId")Integer reportId,@RequestParam("score")String score){
+        reportService.updateScore(reportId,score);
+        return ExperimentUtil.getJSONString(0,"评分成功");
     }
 }

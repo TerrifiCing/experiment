@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="/html-student/common-student :: link"></head>
+
+<body>
+    <!-- Left column -->
+    <div class="templatemo-flex-row">
+        <div th:replace="/html-student/common-student :: left"></div>
+        <!-- Main content -->
+        <div class="templatemo-content col-1 light-gray-bg">
+            <div class="templatemo-top-nav-container">
+                <div class="row">
+                    <nav class="templatemo-top-nav col-lg-12 col-md-12">
+                        <ul class="text-uppercase">
+                            <li><h2><a th:href="@{/{account}/userCenter (account=${user.account})}" class="active">个人信息</a></h2></li>
+							<li><h2><a th:href="@{/{account}/changePassword (account=${user.account})}" >修改密码</a></h2></li>
+                            <div style="float: right">
+                                <li>
+                                    <div class="dropdown">
+                                        <img id="avatar-img" src="../images/sunset.jpg" th:src="${user.url}" alt="头像"/>
+                                        <div class="dropdown-content">
+                                            <a th:href="@{/{account}/userCenter (account=${user.account})}">个人主页</a>
+                                            <a th:href="@{/{account}/changePassword (account=${user.account})}">修改密码</a>
+                                            <a href="/logout">退出登录</a>
+                                        </div>
+                                    </div>
+                                </li>
+                                <li style="font-family: 微软雅黑" th:text="'&nbsp; ' + ${user.nickname}+'，欢迎回来！'">U201513315，欢迎回来！</li>
+                            </div>
+                        </ul>
+                    </nav>
+                </div>
+            </div>
+            <div class="templatemo-content-container">
+                <div class="templatemo-content-widget white-bg col-2">
+                    <div class="madia margin-bottom-30">
+                        <div class="media-left padding-right-25">
+                            <a href="#">
+								<img class="media-object img-circle templatemo-img-bordered" th:src="${user.url}" alt="person"/>
+							</a>
+                        </div>
+                        <div class="media-body">
+                            <h2 class="media-heading text-uppercase blue-text" th:text="${user.nickname}">Really</h2>
+                            <p th:text="${user.academy}">自动化</p>
+                        </div>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="table">
+                            <tbody th:if="${change == 0}">
+                                <tr>
+                                    <td>
+                                        <div class="circle green-bg"></div>
+                                    </td>
+                                    <td>昵称</td>
+                                    <td class="edit" th:text="${user.nickname}">讲师</td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <div class="circle green-bg"></div>
+                                    </td>
+                                    <td>姓名</td>
+                                    <td class="edit" th:text="${user.name}">李老师</td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <div class="circle green-bg"></div>
+                                    </td>
+                                    <td>学（工）号</td>
+                                    <td th:text="${user.account}">U123456789</td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <div class="circle green-bg"></div>
+                                    </td>
+                                    <td>学院</td>
+                                    <td class="edit" th:text="${user.academy}">电子信息与通信学院</td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <div class="circle green-bg"></div>
+                                    </td>
+                                    <td>班级</td>
+                                    <td class="edit" th:text="${user.classname}">电信1505班</td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <div class="circle green-bg"></div>
+                                    </td>
+                                    <td>职务</td>
+                                    <td th:text="${user.position}">讲师</td>
+                                </tr>
+                            </tbody>
+                            <tbody th:if="${change != 0}">
+                            <tr>
+                                <td>
+                                    <div class="circle green-bg"></div>
+                                </td>
+                                <td>昵称</td>
+                                <td><input th:placeholder="${user.nickname}" class="form-control" id="nickname" th:value="${user.nickname}"></td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <div class="circle green-bg"></div>
+                                </td>
+                                <td>姓名</td>
+                                <td><input th:placeholder="${user.name}" class="form-control" id="name" th:value="${user.name}"></td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <div class="circle green-bg"></div>
+                                </td>
+                                <td>学（工）号</td>
+                                <td th:text="${user.account}" id="account" th:value="${user.account}">U123456789</td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <div class="circle green-bg"></div>
+                                </td>
+                                <td>学院</td>
+                                <td><input th:value="${user.academy}" th:placeholder="${user.academy}" class="form-control" id="academy"></td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <div class="circle green-bg"></div>
+                                </td>
+                                <td>班级</td>
+                                <td><input th:value="${user.classname}" th:placeholder="${user.classname}" class="form-control" id="classname"></td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <div class="circle green-bg"></div>
+                                </td>
+                                <td>职务</td>
+                                <td th:text="${user.position}">讲师</td>
+                            </tr>
+                            </tbody>
+                        </table>
+
+                    </div>
+                    <div class="form-group text-right" th:if="${change == 0}">
+                        <button type="button" class="templatemo-edit-btn" onclick="window.location.href= '?change=1'">编辑</button>
+                    </div>
+                    <div class="form-group text-right" th:if="${change != 0}">
+                        <button type="submit" class="templatemo-edit-btn" id="save">保存</button>
+                    </div>
+                </div>
+            </div>
+            <!-- Second row ends -->
+            <footer th:replace="/html-student/common-student :: footer"></footer>
+        </div>
+    </div>
+    <!-- JS -->
+    <script src="../js/jquery.js"></script>
+
+    <script src="../js/main.js"></script>
+    <script>
+        $("#save").on("click",function () {
+            var url = "/user/update?";
+            var nick = $('#nickname').val();
+            var name = $('#name').val();
+            var account = $('#account').attr("value");
+            var academy = $('#academy').val();
+            var classname = $('#classname').val();
+            if(nick === ''){
+                nick = $('#nickname').attr("value");
+            }
+            if(name === ''){
+                name = $('#name').attr("value");
+            }
+            if(academy === ''){
+                academy = $('#academy').attr("value");
+            }
+            if(classname === ''){
+                classname = $('#classname').attr("value");
+            }
+            $.ajax({
+                type:"post",
+                url:url+'nickname='+nick+'&name='+name+'&account='+account+'&academy='+academy+'&classname='+classname,
+                success:function () {
+                    window.location.href='/' + account + '/userCenter';
+                }
+            });
+        });
+    </script>
+</body>
+
+</html>

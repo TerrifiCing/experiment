@@ -28,11 +28,12 @@ public class PassportInterceptor implements HandlerInterceptor {
     private HostHolder hostHolder;
 
     @Override
-    public boolean preHandle(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, Object o) throws Exception {
+    public boolean preHandle(HttpServletRequest httpServletRequest,
+                             HttpServletResponse httpServletResponse, Object o) throws Exception {
         String ticket = null;
         if (httpServletRequest.getCookies() != null) {
             for (Cookie cookie : httpServletRequest.getCookies()) {
-                if (cookie.getName().equals("ticket")) {
+                if (cookie.getName().equals("ticket")) { //检测浏览器cookie中是否有ticket
                     ticket = cookie.getValue();
                     break;
                 }
@@ -41,10 +42,11 @@ public class PassportInterceptor implements HandlerInterceptor {
 
         if (ticket != null) {
             LoginTicket loginTicket = loginTicketDao.selectByTicket(ticket);
+            //判断ticket是否过期
             if (loginTicket == null || loginTicket.getExpired().before(new Date()) || loginTicket.getStatus() != 0) {
                 return true;
             }
-
+            //根据ticket信息获取用户信息
             User user = userDao.selectUserById(loginTicket.getUserId());
             hostHolder.setUser(user);
         }

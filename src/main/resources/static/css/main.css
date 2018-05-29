@@ -1,32 +1,32 @@
 .announcement-status {
-	color: #888;
-	padding-top: 10px;
+  color: #888;
+  padding-top: 10px;
 }
 
 .width-50 {
-	width: 50%
+  width: 50%
 }
 
 .templatemo-delete-btn {
-	border: 1px solid #ddd;
-	border-radius: 3px;
-	color: red;
-	padding: 5px 15px;
-	transition: all 0.3s ease;
+  border: 1px solid #ddd;
+  border-radius: 3px;
+  color: red;
+  padding: 5px 15px;
+  transition: all 0.3s ease;
 }
 
 .templatemo-delete-btn:hover, .templatemo-add-btn:hover {
-	background-color: #39ADB4;
-	border: 1px solid #39ADB4;
-	color: white;
+  background-color: #39ADB4;
+  border: 1px solid #39ADB4;
+  color: white;
 }
 
 .templatemo-add-btn {
-	border: 1px solid #ddd;
-	border-radius: 3px;
-	color: green;
-	padding: 5px 15px;
-	transition: all 0.3s ease;
+  border: 1px solid #ddd;
+  border-radius: 3px;
+  color: green;
+  padding: 5px 15px;
+  transition: all 0.3s ease;
 }
 
 /*#avatar-div {
@@ -39,135 +39,147 @@
 	-moz-border-radius: 32px;
 	-webkit-border-radius: 32px;
 }*/
+
 #avatar-img {
-	width: 35px;
-	height: 35px;
-	border-radius: 50%;
-	color: #FFFFF0;
-	display: inline-block;
-	position: relative;
+  width: 35px;
+  height: 35px;
+  border-radius: 50%;
+  color: #FFFFF0;
+  display: inline-block;
+  position: relative;
 }
 
 .dropdown:hover .dropdown-content {
-	display: block;
+  display: block;
 }
 
 .dropdown-content {
-	display: none;
-	position: absolute;
-	background-color: #f9f9f9;
-	min-width: 100px;
-	box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
-	z-index: 9999;
+  display: none;
+  position: absolute;
+  background-color: #f9f9f9;
+  min-width: 100px;
+  box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+  z-index: 9999;
 }
 
 .dropdown-content a {
-	color: black;
-	padding: 12px 16px;
-	text-decoration: none;
-	display: block;
+  color: black;
+  padding: 12px 16px;
+  text-decoration: none;
+  display: block;
 }
 
 .dropdown-content a:hover {
-	background-color: #f1f1f1;
+  background-color: #f1f1f1;
 }
 
 .publisher, .release-date, .release-label {
-	display: inline-block;
+  display: inline-block;
 }
 
 .publisher, .release-date {
-	padding-right: 30px;
+  padding-right: 30px;
 }
 
 .dialog {
-	width: 360px;
-	border: none;
-	position: absolute;
-	display: none;
-	z-index: 101;
+  width: 360px;
+  border: none;
+  position: absolute;
+  display: none;
+  z-index: 101;
 }
 
 .dialog .title {
-	background-color: #39ADB4;
-	padding: 10px;
-	color: #fff;
-	font-weight: bold;
+  background-color: #39ADB4;
+  padding: 10px;
+  color: #fff;
+  font-weight: bold;
 }
 
 .dialog .title img {
-	float: right;
+  float: right;
 }
 
 .dialog .content {
-	background-color: #fff;
-	padding: 25px;
-	height: 60px;
+  background-color: #fff;
+  padding: 25px;
+  height: 60px;
 }
 
 .dialog .content img {
-	float: left;
+  float: left;
 }
 
 .dialog .content span {
-	float: left;
-	padding-top: 0;
-	padding-left: 10px;
-	font-size: 14px;
+  float: left;
+  padding-top: 0;
+  padding-left: 10px;
+  font-size: 14px;
 }
 
 .dialog .bottom {
-	text-align: right;
-	padding: 10px 10px 10px 0px;
-	background-color: #eee;
+  text-align: right;
+  padding: 10px 10px 10px 0px;
+  background-color: #eee;
 }
 
 .mask {
-	width: 100%;
-	height: 100%;
-	background-color: rgba(0, 0, 0, 0.4);
-	position: absolute;
-	top: 0px;
-	left: 0px;
-	display: none;
-	z-index: 100;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.4);
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  display: none;
+  z-index: 100;
 }
 
 .checkboxOne {
-    width: 40px;
-    height: 10px;
-    background: #555;
-    margin-top: 20px;
-    margin-bottom: 20px;
-    margin-left: 30px;
-    margin-right: 20px;
-    position: relative;
-    border-radius: 3px;
+  width: 40px;
+  height: 10px;
+  background: #555;
+  margin-top: 20px;
+  margin-bottom: 20px;
+  margin-left: 30px;
+  margin-right: 20px;
+  position: relative;
+  border-radius: 3px;
 }
 
 .checkboxOne label {
-    display: block;
-    width: 16px;
-    height: 16px;
-    border-radius: 50%;
-
-    -webkit-transition: all .5s ease;
-    -moz-transition: all .5s ease;
-    -o-transition: all .5s ease;
-    -ms-transition: all .5s ease;
-    transition: all .5s ease;
-    cursor: pointer;
-    position: absolute;
-    top: -3px;
-    left: -3px;
-
-    background: #ccc;
+  display: block;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  -webkit-transition: all .5s ease;
+  -moz-transition: all .5s ease;
+  -o-transition: all .5s ease;
+  -ms-transition: all .5s ease;
+  transition: all .5s ease;
+  cursor: pointer;
+  position: absolute;
+  top: -3px;
+  left: -3px;
+  background: #ccc;
 }
 
-.checkboxOne input[type=checkbox]:checked + label {
-    left: 27px;
+.checkboxOne input[type=checkbox]:checked+label {
+  left: 27px;
 }
 
 #search-btn {
-	margin-top: 25px;
+  margin-top: 25px;
+}
+
+#attendance {
+  margin-right: 10px;
+}
+
+.no-course {
+  font-size: 16px;
+  display: none;
+}
+
+.margin-top-20 {
+  margin-top: 20px;
 }

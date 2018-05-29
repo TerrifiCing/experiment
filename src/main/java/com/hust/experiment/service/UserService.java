@@ -52,7 +52,7 @@ public class UserService {
             return map;
         }
 
-        if (password.equals("")||password == null) {
+        if (password.equals("")) {
             map.put("msgPassword", "密码不能为空");
             return map;
         }
@@ -113,25 +113,28 @@ public class UserService {
     public List<User> getUserByParams(String accountParam,String accademyParam,String classParam){
         List<User> list = new ArrayList<>();
         if(!accountParam.equals("")){
+            //如果输入了准确的学号，则查出此用户
             if(accountParam.length() == 10&&hasUser(accountParam)){
                     list.add(userDao.selectByAccount(accountParam));
             }else {
                 char head = accountParam.toUpperCase().charAt(0);
-                if(head == 'M'){
+                if(head == 'M'||accountParam.equals("管理员")){
                     list.addAll(userDao.selectByPosition("管理员"));
-                }else if(head == 'T'){
+                }else if(head == 'T'||accountParam.equals("教师")){
                     list.addAll(userDao.selectByPosition("教师"));
-                }else if(head == 'U'){
+                }else if(head == 'U'||accountParam.equals("学生")){
                     list.addAll(userDao.selectByPosition("学生"));
                 }
             }
         }
+        //如果学院参数不为空，传参进行查找
         if(!accademyParam.equals("")){
             List<User> findList = userDao.selectByAcademy(accademyParam);
             if(findList != null&&!findList.isEmpty()){
                 list.addAll(findList);
             }
         }
+        //如果班级参数不为空，传参进行查找
         if(!classParam.equals("")){
             List<User> findList2 = userDao.selectByClass(classParam);
             if(findList2 != null&&!findList2.isEmpty()){

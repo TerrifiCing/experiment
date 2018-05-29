@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="/html-student/common-student :: link"></head>
+
+<body>
+  <!-- Left column -->
+  <div class="templatemo-flex-row">
+    <div th:replace="/html-student/common-student :: left"></div>
+    <!-- Main content -->
+    <div class="templatemo-content col-1 light-gray-bg">
+      <div class="templatemo-top-nav-container">
+        <div class="row">
+          <nav class="templatemo-top-nav col-lg-12 col-md-12">
+            <ul class="text-uppercase">
+              <li><h2><a th:href="@{/{account}/courseCenter (account=${user.account})}" class="active">选课菜单</a></h2></li>
+              <li><h2><a th:href="@{/{account}/courseSelected (account=${user.account})}" >已选课程</a></h2></li>
+              <div style="float: right">
+                <!-- <li><button id="attendance" class="templatemo-edit-btn">签到</button></li> -->
+                <li>
+                  <div class="dropdown">
+                    <img id="avatar-img" src="../images/sunset.jpg" th:src="${user.url}" alt="头像">
+                    <div class="dropdown-content">
+                      <a th:href="@{/{account}/userCenter (account=${user.account})}">个人主页</a>
+                      <a th:href="@{/{account}/changePassword (account=${user.account})}">修改密码</a>
+                      <a href="/logout">退出登录</a>
+                    </div>
+                  </div>
+                </li>
+                <li style="font-family: 微软雅黑" th:text="'&nbsp; ' + ${user.nickname}+'，欢迎回来！'">U201513315，欢迎回来！</li>
+                <p id="userId" th:value="${user.id}"></p>
+                <p rel="12"></p>
+              </div>
+            </ul>
+          </nav>
+        </div>
+      </div>
+       <div class="templatemo-content-container">
+        <div class="templatemo-content-widget no-padding">
+          <div class="panel panel-default table-responsive">
+            <div class="templatemo-content-widget white-bg ">
+              <label  style="font-size: 20px" th:if="${validCourses == null}">当前没有可选的课程！</label>
+              <label  style="font-size: 20px" th:if="${validCourses != null}">当前可选的课程</label>
+            </div>
+
+            <table class="table table-striped table-bordered templatemo-user-table">
+              <thead>
+                <tr>
+                  <td width="50px"><a  class="white-text templatemo-sort-by"><span class="caret"></span></a></td>
+                  <td width="100px"><a  class="white-text templatemo-sort-by">实验名 <span class="caret"></span></a></td>
+                  <td width="150px"><a  class="white-text templatemo-sort-by">实验时间 <span class="caret"></span></a></td>
+                  <td width="120px"><a  class="white-text templatemo-sort-by">实验地点 <span class="caret"></span></a></td>
+                  <td width="100px"><a  class="white-text templatemo-sort-by">任课老师 <span class="caret"></span></a></td>
+                  <td width="80px"><a  class="white-text templatemo-sort-by">课堂容量 <span class="caret"></span></a></td>
+                  <td width="80px"><a  class="white-text templatemo-sort-by">选课人数 <span class="caret"></span></a></td>
+                  <td>操作</td>
+                </tr>
+              </thead>
+              <tbody>
+              <div th:if="${validCourses != null}">
+                <tr th:each="courseVo : ${courseVos}" th:value="${courseVo.get('course').id}">
+                  <td th:text="${courseVoStat.index + 1}">1</td>
+                  <td th:text="${courseVo.get('exp').expName}">模电</td>
+                  <td th:text="${#dates.format(courseVo.get('course').classTime, 'yyyy-MM-dd HH:mm')}">周三晚</td>
+                  <td th:text="${courseVo.get('course').classroom}">南一楼中203</td>
+                  <td th:text="${courseVo.get('teacher').name}">张老师</td>
+                  <td th:text="${courseVo.get('course').count}">25</td>
+                  <td th:text="${courseVo.get('count')}">10</td>
+                  <td width="200">
+                    <button class="templatemo-edit-btn select-course" type="button" id="subCourse" th:text="${courseVo.get('sub')}">选课</button>
+                    <button class="templatemo-edit-btn course-detail" type="button">详情</button>
+                  </td>
+                </tr>
+              </div>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+      <!-- Second row ends -->
+      <div class="templatemo-content-container no-course">
+        <p>暂时没有可选的课程!</p>
+      </div>
+      <div class="mask"></div>
+      <div class="dialog">
+        <div class="title">
+          实验说明
+        </div>
+        <div class="content">
+          <span>
+
+              <p>物理实验：示波器的使用方法</p>
+
+          </span>
+        </div>
+        <div class="bottom">
+          <input id="Button3" type="button" value="确定" class="templatemo-delete-btn" />
+        </div>
+      </div>
+      <footer th:replace="/html-student/common-student :: footer"></footer>
+    </div>
+  </div>
+  </div>
+  <!-- JS -->
+  <script src="../js/jquery.js"></script>
+  <script src="../js/main.js"></script>
+  <script>
+    $(".select-course").on("click",function () {
+        var url = "/selectCourse?";
+        var operate = 1;
+        var studentId = $('#userId').attr("value");
+        var courseId = $(this).parent('td').parent('tr').attr("value");
+        console.log(courseId);
+        $.ajax({
+            type:"post",
+            url:url + 'operate=' + operate + '&studentId=' + studentId + '&courseId=' + courseId,
+            success:function (result) {
+                var res = JSON.parse(result);
+                if(res.code === 0){
+                    alert("选课成功！");
+                }else {
+                    alert(res.selectMsg);
+                }
+                window.location.reload();
+            },
+            error:function () {
+                alert("操作失败！");
+                window.location.reload();
+            }
+        });
+    });
+  </script>
+</body>
+
+</html>

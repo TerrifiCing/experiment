@@ -5,6 +5,9 @@ import org.springframework.stereotype.Service;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
 
+import java.util.List;
+import java.util.Set;
+
 @Service
 public class JedisAdapter implements InitializingBean {
     private JedisPool pool = null;
@@ -98,6 +101,20 @@ public class JedisAdapter implements InitializingBean {
             return jedis.scard(key);
         } catch (Exception e) {
             return 0;
+        } finally {
+            if (jedis != null) {
+                jedis.close();
+            }
+        }
+    }
+
+    public Set<String> getMembersOfKey(String key){
+        Jedis jedis = null;
+        try {
+            jedis = pool.getResource();
+            return jedis.smembers(key);
+        } catch (Exception e) {
+            return null;
         } finally {
             if (jedis != null) {
                 jedis.close();

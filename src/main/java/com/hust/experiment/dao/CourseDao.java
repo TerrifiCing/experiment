@@ -22,4 +22,10 @@ public interface CourseDao {
 
     @Select({"select ", SELECT_FIELDS, " from ", TABLE_NAME, " where exp_id=#{id}"})
     List<Course> selectCourseByExp(int id);
+
+    @Select({"select ", SELECT_FIELDS, " from ", TABLE_NAME})
+    List<Course> selectAllCourse();
+
+    @Select({"select ", SELECT_FIELDS, " from ", TABLE_NAME, "where status = 0"})
+    List<Course> selectAllZeroCourse();
 }

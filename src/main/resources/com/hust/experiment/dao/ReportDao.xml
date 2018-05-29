@@ -23,5 +23,4 @@
         FROM
         <include refid="table"/>
     </select>
-
 </mapper>

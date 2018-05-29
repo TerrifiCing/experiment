@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="/html-teacher/common-teacher :: link"></head>
+
+<body>
+    <!-- Left column -->
+    <div class="templatemo-flex-row">
+        <div th:replace="/html-teacher/common-teacher :: left"></div>
+        <!-- Main content -->
+        <div class="templatemo-content col-1 light-gray-bg">
+            <div class="templatemo-top-nav-container">
+                <div class="row">
+                    <nav class="templatemo-top-nav col-lg-12 col-md-12">
+                        <ul class="text-uppercase">
+                            <li><h2><a th:href="@{/{account}/userCenter (account=${user.account})}" >个人信息</a></h2></li>
+							<li><h2><a th:href="@{/{account}/changePassword (account=${user.account})}" class="active">修改密码</a></h2></li>
+                            <div style="float: right">
+                                <li>
+                                    <div class="dropdown">
+                                        <img id="avatar-img" src="../images/sunset.jpg" th:src="${user.url}" alt="头像">
+                                        <div class="dropdown-content">
+                                            <a th:href="@{/{account}/userCenter (account=${user.account})}">个人主页</a>
+                                            <a th:href="@{/{account}/changePassword (account=${user.account})}">修改密码</a>
+											<a href="/logout">退出登录</a>
+                                        </div>
+                                    </div>
+                                </li>
+                                <li style="font-family: 微软雅黑" th:text="'&nbsp; ' + ${user.nickname}+'，欢迎回来！'">U201513315，欢迎回来！</li>
+                                <p th:value="${user.account}" id="account"></p>
+                            </div>
+                        </ul>
+                    </nav>
+                </div>
+            </div>
+            <div class="templatemo-content-container">
+                <div class="templatemo-content-widget templatemo-login-widget white-bg ">
+                    <form method="post" class="templatemo-login-form">
+                        <div class="form-group">
+                            <div class="input-group">
+                                <div class="input-group-addon"><i class="fa fa-key fa-fw"></i></div>
+                                <input type="password" class="form-control" id="oldpassword" placeholder="请输入原密码">
+                                <div style="display: inline" id="tip1"></div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="input-group">
+                                <div class="input-group-addon"><i class="fa fa-key fa-fw"></i></div>
+                                <input type="password" id="password1" class="form-control" placeholder="请输入新密码">
+                                <div style="display: inline" id="tip2"></div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="input-group">
+                                <div class="input-group-addon"><i class="fa fa-key fa-fw"></i></div>
+                                <input type="password" id="password2" class="form-control" placeholder="请再次输入新密码">
+                                <div style="display: inline" id="tip3"></div>
+                            </div>
+                        </div>
+                        <div class="form-group text-center">
+                            <button type="button" id="btn" class="templatemo-blue-button width-100">确认</button>
+                            <button style="margin-top: 10px" type="reset" class="templatemo-white-button width-100">重置</button>
+                            <div style="display: inline" id="tip4"></div>
+                        </div>
+                    </form>
+                </div>
+                <!-- Second row ends -->
+            </div>
+            <footer th:replace="/html-admin/common-admin :: footer"></footer>
+        </div>
+    </div>
+    <!-- JS -->
+    <script src="../js/jquery.js"></script>
+    <script src="../js/main.js"></script>
+    <script>
+        //修改密码
+        $("#oldpassword").blur(function () {
+            var url = "/checkOldPassword?";
+            var old = $("#oldpassword").val();
+            var account = $("#account").attr("value");
+            $.ajax({
+                url:url+"account="+account+"&oldPassword="+old,
+                type: "post",
+                success: function (e) {
+                    var result = JSON.parse(e);
+                    if (result.code === 0) {
+                        $("#tip1").html("<font color=\"green\" size=\"2\"> 正确</font>");
+                    } else {
+                        $("#tip1").html("<font color=\"red\" size=\"2\">  错误</font>");
+                    }
+                }
+            });
+        });
+        $("#password1").blur(function () {
+            var num = $("#password1").val().length;
+            if (num < 6) {
+                $("#tip2").html("<font color=\"red\" size=\"2\">  密码太短，不应少于6个字符</font>");
+            } else if (num > 18) {
+                $("#tip2").html("<font color=\"red\" size=\"2\">  密码太长，不应多于18个字符</font>");
+            } else {
+                $("#tip2").html("<font color=\"green\" size=\"2\"> 正确</font>");
+            }
+        });
+        $("#password2").blur(function () {
+            var tmp = $("#password1").val();
+            var num = $("#password2").val().length;
+            if ($("#password2").val() != tmp) {
+                $("#tip3").html("<font color=\"red\" size=\"2\">  错误</font>");
+            } else {
+                if (num >= 6 && num <= 18) {
+                    $("#tip3").html("<font color=\"green\" size=\"2\">  正确</font>");
+                } else {
+                    $("#tip3").html("<font color=\"red\" size=\"2\">  无效</font>");
+                }
+            }
+        });
+        $("#btn").click(function () {
+            var flag = false;
+            var old = $("#oldpassword").val();
+            var pass = $("#password1").val();
+            var pass2 = $("#password2").val();
+            var num1 = $("#password1").val().length;
+            var num2 = $("#password2").val().length;
+            if (num1 != num2 || num1 < 6 || num2 < 6 || num1 > 18 || num2 > 18 || pass != pass2) {
+                flag = false;
+            } else {
+                flag = true;
+            }
+            if (flag) {
+                var account = $("#account").attr("value");
+                $.ajax({
+                    url: "/changePassword?newPassword="+pass2+"&account="+account,
+                    type: "post",
+                    success: function (e) {
+                        var result = JSON.parse(e);
+                        if (result.code == 0) {
+                            $("#tip4").show().html("<font color=\"green\" size=\"3\">  修改成功!</font>");
+                            $("#oldpassword").val("");
+                            $("#password1").val("");
+                            $("#password2").val("");
+                            $("#tip1").empty();
+                            $("#tip2").empty();
+                            $("#tip3").empty();
+                            $("#tip4").delay(2000).hide(0);
+                        } else {
+                            $("#tip4").show().html("<font color=\"red\" size=\"3\">  原密码输入错误!</font>");
+                        }
+                    }
+                });
+            } else {
+
+                $("#tip4").show().html("<font color=\"red\" size=\"3\"> 旧密码不正确或新密码格式不对!</font>");
+            }
+        });
+
+
+    </script>
+</body>
+
+</html>

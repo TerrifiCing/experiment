@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="/html-teacher/common-teacher :: link"></head>
+
+<body>
+    <!-- Left column -->
+    <div class="templatemo-flex-row">
+        <div th:replace="/html-teacher/common-teacher :: left"></div>
+        <!-- Main content -->
+        <div class="templatemo-content col-1 light-gray-bg">
+            <div class="templatemo-top-nav-container">
+                <div class="row">
+                    <nav class="templatemo-top-nav col-lg-12 col-md-12">
+                        <ul class="text-uppercase">
+                            <li><h2><a th:href="@{/{account}/announcement (account=${user.account})}" >浏览公告</a></h2></li>
+							<li><h2><a th:href="@{/{account}/createAnnouncement (account=${user.account})}" class="active">创建公告</a></h2></li>
+                            <div style="float: right">
+                                <li>
+                                    <div class="dropdown">
+                                        <img id="avatar-img"  th:src="${user.url}" alt="头像"/>
+                                        <div class="dropdown-content">
+                                            <a th:href="@{/{account}/userCenter (account=${user.account})}">个人主页</a>
+                                            <a th:href="@{/{account}/changePassword (account=${user.account})}">修改密码</a>
+                                            <a href="/logout">退出登录</a>
+                                        </div>
+                                    </div>
+                                </li>
+                                <li style="font-family: 微软雅黑" th:text="'&nbsp; ' + ${user.nickname}+'，欢迎回来！'">U201513315，欢迎回来！</li>
+                            </div>
+                        </ul>
+                    </nav>
+                </div>
+            </div>
+            <div class="templatemo-content-container">
+                <div class="templatemo-content-widget white-bg">
+                    <h2 class="margin-bottom-10">创建新公告</h2>
+                    <form id="announcement-form" action="/addMail" class="templatemo-login-form" method="post" enctype="multipart/form-data">
+                        <div class="row form-group">
+                            <div class="col-lg-6 col-md-6 form-group">
+                                <label for="input-ann-title">公告标题</label>
+                                <input type="text" class="form-control" id="input-ann-title" name="title" placeholder="新公告"/>
+								<input name="type" type="hidden" value="公告"/>
+								<input name="fromId" type="hidden" th:value="${user.id}"/>
+                            </div>
+                            <div class="col-lg-6 col-md-6 form-group">
+                                <label class="control-label templatemo-block">公告类型</label>
+                                <select class="form-control shift-info" value="" name="about">
+                                    <tr th:each="exp : ${exps}">
+                                        <td>
+                                    <option value="" th:text="${exp.expName}">类型1</option>
+                                        </td>
+                                    </tr>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="row form-group">
+                            <div class="col-lg-12 form-group">
+                                <label class="control-label" for="input-ann-content">公告内容</label>
+                                <textarea class="form-control" id="input-ann-content" rows="6" name="content"></textarea>
+                            </div>
+                        </div>
+                        <div class="row form-group">
+                            <div class="col-lg-12">
+                                <label class="control-label templatemo-block">上传文件</label>
+                                <input type="file" name="fileToUpload" id="fileToUpload" class="filestyle" data-buttonName="btn-primary" data-buttonBefore="true" data-icon="false"/>
+                                <p>Maximum upload size is 5 MB.</p>
+                            </div>
+                        </div>
+                        <div class="form-group text-right">
+                            <button id='release-announcement' type="button" class="templatemo-blue-button">发布</button>
+                            <button type="reset" class="templatemo-white-button">重置</button>
+                        </div>
+                    </form>
+                </div>
+                <div class="mask"></div>
+                <div class="dialog">
+                    <div class="title">
+                        发布时提示
+                    </div>
+                    <div class="content">
+                        <span>发布成功！</span>
+                    </div>
+                    <div class="bottom">
+                        <input id="release-btn" type="button" value="确定" class="templatemo-edit-btn"/>
+                    </div>
+                </div>
+            </div>
+            <!-- Second row ends -->
+            <footer th:replace="/html-teacher/common-teacher :: footer"></footer>
+        </div>
+    </div>
+    
+    <!-- JS -->
+    <script src="../js/jquery.js"></script>
+    <script src="https://rawgit.com/indrimuska/jquery-editable-select/master/src/jquery-editable-select.js"></script>
+    <script src="../js/main.js"></script>
+    <script src="../js/edittableSelect.js"></script>
+</body>
+
+</html>

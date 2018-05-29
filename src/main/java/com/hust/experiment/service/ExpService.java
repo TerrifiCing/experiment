@@ -98,4 +98,13 @@ public class ExpService {
         }
         return vos;
     }
+
+    public boolean deleteExp(int id){
+        try{
+            expDao.deleteExperimentById(id);
+            return true;
+        }catch (Exception e){
+            return false;
+        }
+    }
 }

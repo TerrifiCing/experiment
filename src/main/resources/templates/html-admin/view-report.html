@@ -1,45 +1,12 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 
-<head>
-    <meta charset="utf-8" />
-    <title>华科实验系统</title>
-    <link href='http://fonts.googleapis.com/css?family=Open+Sans:400,300,400italic,700' rel='stylesheet' type='text/css' />
-    <link href="../css/font-awesome.min.css" rel="stylesheet" />
-    <link href="../css/bootstrap.css" rel="stylesheet">
-    <link href="../css/bootstrap.min.css" rel="stylesheet" />
-    <link href="../css/templatemo-style.css" rel="stylesheet" />
-    <link href="../css/main.css" rel="stylesheet">
-    <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
-    <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
-</head>
+<head th:replace="/html-admin/common-admin :: link"></head>
 
 <body>
     <!-- Left column -->
     <div class="templatemo-flex-row">
-        <div class="templatemo-sidebar">
-            <header class="templatemo-site-header">
-                <div class="square"></div>
-                <h1>HUST LAB</h1>
-            </header>
-            <div class="profile-photo-container">
-                <img src="../images/profile-photo.jpg" alt="Profile Photo" class="img-responsive" />
-                <div class="profile-photo-overlay"></div>
-            </div>
-            <div class="mobile-menu-icon">
-                <i class="fa fa-bars"></i>
-            </div>
-            <nav class="templatemo-left-nav">
-                <ul>
-                    <li><a th:href="@{/{account}/announcement (account=${user.account})}"><i class="fa fa-map-marker fa-fw"></i>公告栏</a></li>
-					<li><a th:href="@{/{account}/userCenter (account=${user.account})}" ><i class="fa fa-home fa-fw"></i>个人中心</a></li>
-					<li><a href="/userManage" ><i class="fa fa-users fa-fw"></i>成员管理</a></li>
-					<li><a href="/courseManage"><i class="fa fa-database fa-fw"></i>实验课程管理</a></li>
-					<li><a href="/reportManage"  class="active"><i class="fa fa-sliders fa-fw"></i>实验报告与数据管理</a></li>
-					<li><a href="/logout"><i class="fa fa-eject fa-fw"></i>登出</a></li>
-                </ul>
-            </nav>
-        </div>
+        <div th:replace="/html-admin/common-admin :: left"></div>
         <!-- Main content -->
         <div class="templatemo-content col-1 light-gray-bg">
             <div class="templatemo-top-nav-container">
@@ -47,7 +14,10 @@
                     <nav class="templatemo-top-nav col-lg-12 col-md-12">
                         <ul class="text-uppercase">
                             <li>
-                                <h2><a href="#" class="active">浏览报告</a></h2>
+                                <h2><a th:href="@{/{account}/reportManage (account=${user.account})}">管理实验报告</a></h2>
+                            </li>
+                            <li>
+                                <h2><a class="active">查看实验报告</a></h2>
                             </li>
                             <div style="float: right">
                                 <li>
@@ -55,7 +25,7 @@
                                         <img id="avatar-img" src="../images/sunset.jpg" th:src="${user.url}" alt="头像">
                                         <div class="dropdown-content">
                                             <a th:href="@{/{account}/userCenter (account=${user.account})}">个人主页</a>
-                                            <a href="/changePassword">修改密码</a>
+                                            <a th:href="@{/{account}/changePassword (account=${user.account})}">修改密码</a>
                                             <a href="/logout">退出登录</a>
                                         </div>
                                     </div>
@@ -67,22 +37,35 @@
                 </div>
             </div>
             <div class="templatemo-content-container">
-                <object data="Intro2SVM.pdf" type="application/pdf" width="95%" height="450">
-                    <embed src="http://localhost:8080//getFile?name=39d5e67448d0493194e65931dd775969.pdf">
-                    <p>This browser does not support PDFs. Please download the PDF to view it: <a href="Intro2SVM.pdf">Download PDF</a>.</p>
+                <object th:data="${reportVo.get('report').reportUrl}" type="application/pdf" width="95%" height="750">
+                    <embed>
+                    <p>This browser does not support PDFs. Please download the PDF to view it: <a>Download PDF</a>.</p>
                     </embed>
                 </object>
                 <div class="templatemo-content-widget white-bg">
                     <div class="row form-group">
+                        <div class="col-lg-6 col-md-6 form-group">
+                            <label style="display: inline;" class="control-label templatemo-block" ><h4 th:text="'学生姓名：'+ ${reportVo.get('student').name}">学生姓名:田聪</h4></label>
+                            <label></label>
+                            <label style="display: inline;" class="control-label templatemo-block" ><h4 th:text="'学生姓名：'+ ${reportVo.get('student').account}">学    号:U201413407</h4></label>
+                            <label></label>
+                        </div>
+                        <div class="col-lg-6 col-md-6 form-group">
+                            <label style="display: inline;" class="control-label templatemo-block" ><h4 th:text="'实验名：'+${reportVo.get('exp').expName}">实 验 名:物理实验</h4></label>
+                            <label></label>
+                            <label style="display: inline;" class="control-label templatemo-block" ><h4 th:text="'指导老师：'+ ${reportVo.get('teacher').name}">指导老师:</h4></label>
+                            <label></label>
+                        </div>
                     <div class="col-lg-6 col-md-6 form-group">
                         <label style="display: inline;" class="control-label templatemo-block" ><h3>得分:</h3></label>
+                        <p id="reportId" th:value="${reportVo.get('report').id}"></p>
                         <input style="margin-top: 10px;"type="text" class="form-control" id="input-score" placeholder="请输入得分..">
                     </div>
-                    <div class="col-lg-6 col-md-6 form-group">
-                        <div class="form-group text-right">
-                            <button style="margin-top: 20px;" id='release-announcement' type="button" class="templatemo-blue-button">确认</button>
+                        <div class="col-lg-6 col-md-6 form-group">
+                            <div class="form-group text-right">
+                                <button style="margin-top: 20px;" id='upScore' type="button" class="templatemo-blue-button">确认</button>
+                            </div>
                         </div>
-                    </div>
                 </div>
                 </div>
             </div>
@@ -99,15 +82,29 @@
                     </div>
                 </div>
             <!-- Second row ends -->
-            <footer class="text-right">
-                <p>Copyright &copy; 2018 Company Name | Designed by <a href="http://www.templatemo.com" target="_parent">templatemo</a></p>
-            </footer>
+            <footer th:replace="/html-admin/common-admin :: footer"></footer>
         </div>
     </div>
     </div>
     <!-- JS -->
     <script src="../js/jquery.js"></script>
     <script src="../js/main.js"></script>
+    <script>
+        $("#upScore").on("click",function () {
+            var score = $('#input-score').val();
+            var id = $('#reportId').attr("value");
+            url = "/score?reportId="+id+"&score="+score;
+            if(confirm("确定要提交评分吗？")){
+                $.ajax({
+                    url:url,
+                    type:"post",
+                    success:function () {
+                        alert("提交评分成功！");
+                    }
+                })
+            }
+        })
+    </script>
 </body>
 
 </html>

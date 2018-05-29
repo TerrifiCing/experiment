@@ -2,10 +2,7 @@ package com.hust.experiment.dao;
 
 
 import com.hust.experiment.model.Report;
-import org.apache.ibatis.annotations.Delete;
-import org.apache.ibatis.annotations.Insert;
-import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.*;
 
 import java.util.List;
 
@@ -32,10 +29,12 @@ public interface ReportDao {
     @Delete({"delete from ", TABLE_NAME, " where id=#{id}"})
     void deleteReport(int id);
 
+    @Update({"update ", TABLE_NAME, " set score=#{score} where id=#{id}"})
+    void updateScore(Report report);
+
     List<Report> getAllReports();
 
     List<Integer> selectAllCourseId();
 
     List<Integer> selectAllStudentId();
-
 }

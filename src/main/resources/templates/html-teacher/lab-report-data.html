@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="/html-teacher/common-teacher :: link"></head>
+
+<body>
+    <!-- Left column -->
+    <div class="templatemo-flex-row">
+        <div th:replace="/html-teacher/common-teacher :: left"></div>
+        <!-- Main content -->
+        <div class="templatemo-content col-1 light-gray-bg">
+            <div class="templatemo-top-nav-container">
+                <div class="row">
+                    <nav class="templatemo-top-nav col-lg-12 col-md-12">
+                        <ul class="text-uppercase">
+                            <li>
+                                <h2><a th:href="@{/{account}/reportManage (account=${user.account})}" class="active">管理实验报告</a></h2>
+                            </li>
+                            <li>
+                                <h2><a onclick="f()">查看实验报告</a></h2>
+                            </li>
+                            <div style="float: right">
+                                <li>
+                                    <div class="dropdown">
+                                        <img id="avatar-img" src="../images/sunset.jpg" th:src="${user.url}" alt="头像">
+                                        <div class="dropdown-content">
+                                            <a th:href="@{/{account}/userCenter (account=${user.account})}">个人主页</a>
+                                            <a th:href="@{/{account}/changePassword (account=${user.account})}">修改密码</a>
+                                            <a href="/logout">退出登录</a>
+                                        </div>
+                                    </div>
+                                </li>
+                                <li style="font-family: 微软雅黑" th:text="'&nbsp; ' + ${user.nickname}+'，欢迎回来！'">U201513315，欢迎回来！</li>
+                                <p id="userAccount" th:value="${user.account}"></p>
+                            </div>
+                        </ul>
+                    </nav>
+                </div>
+            </div>
+            <div class="templatemo-content-container">
+                <div class="templatemo-content-widget white-bg ">
+                    <div class="row form-group">
+                        <div class="col-lg-2 col-md-3 form-group">
+                            <label>学号</label>
+                            <input type="text" class="form-control"  id="param" placeholder="输入学号"/>
+                        </div>
+                        <div class="col-lg-3 col-md-3 form-group">
+                            <label>学院</label>
+                            <select class="form-control shift-info" id="param2">
+                                <tr th:each="academy : ${academies}">
+                                    <td>
+                                <option th:text="${academy}">类型1</option>
+                                    </td>
+                                </tr>
+                            </select>
+                        </div>
+                        <div class="col-lg-3 col-md-3 form-group">
+                            <label>实验</label>
+                            <select class="form-control shift-info" id="param3">
+                                <tr th:each="exp : ${exps}">
+                                    <td>
+                                <option th:text="${exp.expName}">类型1</option>
+                                    </td>
+                                </tr>
+                            </select>
+                        </div>
+                        <div class="col-lg-2 col-md-2 form-group">
+                            <button class="templatemo-edit-btn" id="search-btn" type="button">搜索</button>
+                            <button class="templatemo-edit-btn" type="button" id="all">全部</button>
+                        </div>
+                    </div>
+                    <div th:if="${seeAll != 1}">
+                        <label th:if="${selectedReports == null}" style="font-size: 15px">没有查询到任何结果，请尝试更换关键词！</label>
+                    </div>
+                </div>
+                <div class="templatemo-content-widget no-padding">
+                    <div class="panel panel-default table-responsive">
+                        <table class="table table-striped table-bordered templatemo-user-table">
+                            <thead>
+                                <tr>
+                                    <td width="50px"><a class="white-text templatemo-sort-by"><span class="caret"></span></a></td>
+                                    <td width="120px"><a class="white-text templatemo-sort-by">学生名 <span class="caret"></span></a></td>
+                                    <td width="120px"><a class="white-text templatemo-sort-by">实验名 <span class="caret"></span></a></td>
+                                    <!--<td width="120px"><a class="white-text templatemo-sort-by">实验数据 <span class="caret"></span></a></td>-->
+                                    <td width="120px"><a class="white-text templatemo-sort-by">实验报告 <span class="caret"></span></a></td>
+                                    <td width="100px"><a class="white-text templatemo-sort-by">得分 <span class="caret"></span></a></td>
+                                    <td width="100px"><a class="white-text templatemo-sort-by">状态 <span class="caret"></span></a></td>
+                                    <td width="200">操作</td>
+                                </tr>
+                            </thead>
+                            <div th:if="${seeAll == 1}">
+                            <tbody>
+                                <tr th:each="allVo : ${allVos}" th:value="${allVo.get('report').id}">
+                                    <td th:text="${allVoStat.index + 1}">1.</td>
+                                    <td th:text="${allVo.get('student').name}">John</td>
+                                    <td th:text="${allVo.get('exp').expName}">物理</td>
+                                    <!--<td><a th:href="@{/viewReport(reportId=${allVo.get('report').id})}">实验数据链接</a></td>-->
+                                    <td><a th:href="@{/{account}/viewReport(reportId=${allVo.get('report').id},account=${user.account})}">实验报告链接</a></td>
+                                    <td class="edit" th:text="${allVo.get('report').score}">80</td>
+                                    <td th:if="${allVo.get('report').status == 1}">已评分</td>
+                                    <td th:if="${allVo.get('report').status == 0}">未评分</td>
+                                    <td width="200">
+                                        <button class="templatemo-edit-btn edit-member" type="button">编辑</button>&nbsp;
+                                        <button class="templatemo-delete-btn delete-member" type="button">删除</button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                            </div>
+                            <div th:if="${selectedReports != null}">
+                                <tbody>
+                                <tr th:each="Vo : ${selectedVos}" th:value="${Vo.get('report').id}">
+                                    <td th:text="${VoStat.index + 1}">1.</td>
+                                    <td th:text="${Vo.get('student').name}">John</td>
+                                    <td th:text="${Vo.get('exp').expName}">物理</td>
+                                    <!--<td><a th:href="@{/viewReport(reportId=${allVo.get('report').id})}">实验数据链接</a></td>-->
+                                    <td><a th:href="@{/{account}/viewReport(reportId=${Vo.get('report').id},account=${user.account})}">实验报告链接</a></td>
+                                    <td class="edit" th:text="${Vo.get('report').score}">80</td>
+                                    <td th:if="${Vo.get('report').status == 1}">已评分</td>
+                                    <td th:if="${Vo.get('report').status == 0}">未评分</td>
+                                    <td width="200">
+                                        <button class="templatemo-edit-btn edit-member" type="button">编辑</button>&nbsp;
+                                        <button class="templatemo-delete-btn delete-member" type="button">删除</button>
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </div>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <!-- Second row ends -->
+            <footer th:replace="/html-admin/common-admin :: footer"></footer>
+        </div>
+    </div>
+    </div>
+    <!-- JS -->
+    <script src="../js/jquery.js"></script>
+    <script src="https://rawgit.com/indrimuska/jquery-editable-select/master/src/jquery-editable-select.js"></script>
+    <script src="../js/main.js"></script>
+    <script src="../js/edittableSelect.js"></script>
+    <script>
+        $('#all').on("click",function () {
+            var userAccount = $('#userAccount').attr("value");
+            var hurl = "/"+userAccount+"/reportManage";
+            window.location.href = hurl;
+        });
+        $("#search-btn").on("click",function () {
+            var userAccount = $('#userAccount').attr("value");
+            var url ="/"+userAccount+ "/reportManage?seeAll=0";
+            var account = $('#param').val();
+            var accademy = $('#param2').val();
+            var courseName = $('#param3').val();
+            if(account !== ""){
+                url = url + "&param1="+account;
+            }
+            if(accademy !== ""){
+                url = url + "&param2="+accademy;
+            }
+            if(courseName !== ""){
+                url = url + "&param3="+courseName;
+            }
+            console.log(url);
+            $.ajax({
+                type:"post",
+                url:url,
+                success:function () {
+                    window.location.href=url;
+                }
+            });
+        });
+        function f() {
+            alert("请通过点击下方学生实验报告url进行查看！");
+        }
+    </script>
+</body>
+
+</html>

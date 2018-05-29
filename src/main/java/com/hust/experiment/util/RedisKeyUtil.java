@@ -3,6 +3,7 @@ package com.hust.experiment.util;
 public class RedisKeyUtil {
     public static String subKey = "SUBSCRIBE_OF_COURSE";
     public static String attendKey = "ATTENDANCEKEY_OF_COURSE";
+    public static String addKey = "COURSESOFSTUDENT";
 
     public static String getSubscribeKey(int id){
         return subKey + String.valueOf(id);
@@ -10,5 +11,9 @@ public class RedisKeyUtil {
 
     public static String getAttendanceKey(int id){
         return attendKey + id;
+    }
+
+    public static String getAddCourseKey(int studentId){
+        return addKey + studentId;
     }
 }

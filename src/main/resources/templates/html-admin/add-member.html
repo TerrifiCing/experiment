@@ -1,46 +1,12 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 
-<head>
-    <meta charset="utf-8" />
-    <title>华科实验系统</title>
-    <link href='http://fonts.googleapis.com/css?family=Open+Sans:400,300,400italic,700' rel='stylesheet' type='text/css' />
-    <link href="../css/font-awesome.min.css" rel="stylesheet" />
-    <link href="../css/bootstrap.css" rel="stylesheet"/>
-    <link href="../css/bootstrap.min.css" rel="stylesheet" />
-    <link href="../css/templatemo-style.css" rel="stylesheet" />
-    <link href="../css/main.css" rel="stylesheet"/>
-    <!-- 引用editable -->
-    <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
-    <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
-</head>
+<head th:replace="/html-admin/common-admin :: link"></head>
 
 <body>
     <!-- Left column -->
     <div class="templatemo-flex-row">
-        <div class="templatemo-sidebar">
-            <header class="templatemo-site-header">
-                <div class="square"></div>
-                <h1>HUST LAB</h1>
-            </header>
-            <div class="profile-photo-container">
-                <img src="../images/profile-photo.jpg" alt="Profile Photo" class="img-responsive" />
-                <div class="profile-photo-overlay"></div>
-            </div>
-            <div class="mobile-menu-icon">
-                <i class="fa fa-bars"></i>
-            </div>
-            <nav class="templatemo-left-nav">
-                <ul>
-                    <li><a th:href="@{/{account}/announcement (account=${user.account})}"><i class="fa fa-map-marker fa-fw"></i>公告栏</a></li>
-					<li><a th:href="@{/{account}/userCenter (account=${user.account})}" ><i class="fa fa-home fa-fw"></i>个人中心</a></li>
-					<li><a href="/userManage"  class="active"><i class="fa fa-users fa-fw"></i>成员管理</a></li>
-					<li><a href="/courseManage"><i class="fa fa-database fa-fw"></i>实验课程管理</a></li>
-					<li><a href="/reportManage"><i class="fa fa-sliders fa-fw"></i>实验报告与数据管理</a></li>
-					<li><a href="/logout"><i class="fa fa-eject fa-fw"></i>登出</a></li>
-                </ul>
-            </nav>
-        </div>
+        <div th:replace="/html-admin/common-admin :: left"></div>
         <!-- Main content -->
         <div class="templatemo-content col-1 light-gray-bg">
             <div class="templatemo-top-nav-container">
@@ -51,7 +17,7 @@
                                 <h2><a href="/userManage">浏览成员</a></h2>
                             </li>
                             <li>
-                                <h2><a href="/addMember"  class="active">添加成员</a></h2>
+                                <h2><a th:href="@{/{account}/addMember (account=${user.account})}" class="active">添加成员</a></h2>
                             </li>
                             <div style="float: right">
                                 <li>
@@ -59,7 +25,7 @@
                                         <img id="avatar-img" src="../images/sunset.jpg" th:src="${user.url}" alt="头像">
                                         <div class="dropdown-content">
                                             <a th:href="@{/{account}/userCenter (account=${user.account})}">个人主页</a>
-                                            <a href="/changePassword">修改密码</a>
+                                            <a th:href="@{/{account}/changePassword (account=${user.account})}">修改密码</a>
                                             <a href="/logout">退出登录</a>
                                         </div>
                                     </div>
@@ -73,29 +39,31 @@
             <div class="templatemo-content-container">
                 <div class="templatemo-content-widget white-bg">
                     <h2 class="margin-bottom-10">添加新成员</h2>
-                    <form id="addmember-form" action="/addUser" class="templatemo-login-form" method="post" enctype="multipart/form-data">
+                    <form id="addmember-form" class="templatemo-login-form" method="post">
                         <div class="row form-group">
                             <div class="col-lg-6 col-md-6 form-group">
-                                <label for="input-ann-title">学号</label>
-                                <input type="text" class="form-control" id="input-ann-title" name="account" placeholder="请输入学号..">
+                                <label>学(工)号</label>
+                                <input type="text" class="form-control" id="account" placeholder="请输入学(工)号..">
+                                <div style="display: inline" id="tip"></div>
                             </div>
                             <div class="col-lg-6 col-md-6 form-group">
-                                <label for="input-ann-title">姓名</label>
-                                <input type="text" class="form-control" id="input-ann-title" name="name" placeholder="请输入姓名..">
+                                <label>姓名</label>
+                                <input type="text" class="form-control" id="name" placeholder="请输入姓名..">
+                                <div style="display: inline" id="tip2"></div>
                             </div>
                         </div>
                         <div class="row form-group">
                             <div class="col-lg-6 col-md-6 form-group">
-                                <label for="input-ann-title">班级</label>
-                                <input type="text" class="form-control" id="input-ann-title" name="class" placeholder="请输入班级..">
+                                <label>班级</label>
+                                <input type="text" class="form-control" id="className" placeholder="请输入班级..">
                             </div>
                             <div class="col-lg-6 col-md-6 form-group">
-                                <label for="input-ann-title">学院</label>
-                                <input type="text" class="form-control" id="input-ann-title" name="academy" placeholder="请输入学院..">
+                                <label>学院</label>
+                                <input type="text" class="form-control" id="academy" placeholder="请输入学院..">
                             </div>
                         </div>
                         <div class="form-group text-right">
-                            <button id='release-announcement' type="submit" class="templatemo-blue-button">添加</button>
+                            <button type="button" class="templatemo-blue-button" id="addOne">添加</button>
                             <button type="reset" class="templatemo-white-button">重置</button>
                         </div>
                     </form>
@@ -114,33 +82,64 @@
                     </div>
                     </form>
                 </div>
-                <div class="mask"></div>
-                <div class="dialog">
-                    <div class="title">
-                        添加时提示
-                    </div>
-                    <div class="content">
-                        <span>添加成功！</span>
-                    </div>
-                    <div class="bottom">
-                        <input id="release-btn" type="button" value="确定" class="templatemo-edit-btn">
-                    </div>
-                </div>
+                <div id="get"></div>
+
             </div>
             <!-- Second row ends -->
-            <footer class="text-right">
-                <p>Copyright &copy; 2018 Company Name | Designed by <a href="http://www.templatemo.com" target="_parent">templatemo</a></p>
-            </footer>
+            <footer th:replace="/html-admin/common-admin :: footer"></footer>
         </div>
     </div>
     </div>
     <!-- JS -->
     <script src="../js/jquery.js"></script>
-    <!-- jQuery 3.3.1-->
     <script src="https://rawgit.com/indrimuska/jquery-editable-select/master/src/jquery-editable-select.js"></script>
-    <!-- <script type="text/javascript" src="../js/templatemo-script.js"></script> -->
-    <!-- Templatemo Script -->
     <script src="../js/main.js"></script>
+    <script>
+        var flag1 = false;
+        var flag2 = false;
+        $("#account").blur(function () {
+            var account = $("#account").val();
+            var head = account.charAt(0);
+            if((head !== 'M'&&head !== 'U'&&head !== 'T')||account.length !== 10){
+                $("#tip").html("<font color=\"green\" size=\"3\">学（工）号不符合要求</font>");
+            }else {
+                $("#tip").html("<font color=\"green\" size=\"3\">格式正确</font></font>");
+                flag1 = true;
+            }
+        });
+        $("#name").blur(function () {
+            var name = $("#name").val();
+            if(name === ""){
+                $("#tip2").html("<font color=\"green\" size=\"3\">姓名不能为空！</font>");
+            }else {
+                flag2 = true;
+            }
+        });
+        $("#addOne").on("click",function () {
+            if(flag1&&flag2){
+                var account = $("#account").val();
+                var name = $("#name").val();
+                var academy = $("#academy").val();
+                var className = $("#className").val();
+                var url = "/addUser?account="+account+"&name="+name;
+                if(academy !== ""){
+                    url = url + "&academy=" + academy;
+                }
+                if(className !== ""){
+                    url = url + "&class=" + className;
+                }
+                $.ajax({
+                    url:url,
+                    type:"post",
+                    success:function (result) {
+                       var res = JSON.parse(result);
+                       alert("已成功添加一名用户：" + res.name + "(" + res.account + ")");
+                    }})
+            }else {
+                alert("请按要求输入！");
+            }
+        });
+    </script>
 </body>
 
 </html>

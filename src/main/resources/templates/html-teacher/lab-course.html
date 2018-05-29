@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="/html-teacher/common-teacher :: link"></head>
+
+<body>
+    <!-- Left column -->
+    <div class="templatemo-flex-row">
+        <div th:replace="/html-teacher/common-teacher :: left"></div>
+        <!-- Main content -->
+        <div class="templatemo-content col-1 light-gray-bg">
+            <div class="templatemo-top-nav-container">
+                <div class="row">
+                    <nav class="templatemo-top-nav col-lg-12 col-md-12">
+                        <ul class="text-uppercase">
+                            <li><h2><a th:href="@{/{account}/courseManage (account=${user.account})}" class="active">课程管理</a></h2></li>
+                            <li><h2><a th:href="@{/{account}/viewSelectedCourse (account=${user.account})}" >查看选课</a></h2></li>
+                            <li><h2><a th:href="@{/{account}/releaseCourse (account=${user.account})}">发布选课</a></h2></li>
+                            <div style="float: right">
+                                <li>
+                                    <div class="dropdown">
+                                        <img id="avatar-img" src="../images/sunset.jpg" th:src="${user.url}" alt="头像">
+                                        <div class="dropdown-content">
+                                            <a th:href="@{/{account}/userCenter (account=${user.account})}">个人主页</a>
+                                            <a th:href="@{/{account}/changePassword (account=${user.account})}">修改密码</a>
+											<a href="/logout">退出登录</a>
+                                        </div>
+                                    </div>
+                                </li>
+                                <li style="font-family: 微软雅黑" th:text="'&nbsp; ' + ${user.nickname}+'，欢迎回来！'">U201513315，欢迎回来！</li>
+                                <p id="userAccount" th:value="${user.account}"></p>
+                            </div>
+                        </ul>
+                    </nav>
+                </div>
+            </div>
+            <div class="templatemo-content-container">
+                <div class="templatemo-content-widget white-bg ">
+                    <div class="row form-group">
+                        <div class="col-lg-3 col-md-3 form-group">
+                            <label>学年学期</label>
+                            <select class="form-control shift-info" id="param1">
+                                <tr th:each="semester : ${semesters}">
+                                    <td>
+                                <option value="" th:text="${semester}">类型1</option>
+                                    </td>
+                                </tr>
+                            </select>
+                        </div>
+                        <div class="col-lg-3 col-md-3 form-group">
+                            <label>课程名</label>
+                            <select class="form-control shift-info" id="param2">
+                                <tr th:each="expN : ${expNames}">
+                                    <td>
+                                        <option value="" th:text="${expN.expName}">类型1</option>
+                                    </td>
+                                </tr>
+                            </select>
+                        </div>
+                        <div class="col-lg-3 col-md-3 form-group">
+                            <label>任课教师</label>
+                            <select class="form-control shift-info" id="param3">
+                                <tr th:each="teacher : ${teachers}">
+                                    <td>
+                                <option value="" th:text="${teacher.name}">类型1</option>
+                                    </td>
+                                </tr>
+                            </select>
+                        </div>
+                        <div class="col-lg-3 col-md-3 form-group">
+                            <button class="templatemo-edit-btn" id="search-btn" type="button">搜索</button>
+                            <button class="templatemo-edit-btn" type="button" id="all">全部</button>
+                        </div>
+                    </div>
+                    <div th:if="${seeAll != 1}">
+                        <label th:if="${selectedExps == null}" style="font-size: 15px">没有查询到任何结果，请尝试更换关键词！</label>
+                    </div>
+                </div>
+                <div class="templatemo-content-widget no-padding">
+                    <div class="panel panel-default table-responsive">
+                        <table class="table table-striped table-bordered templatemo-user-table">
+                            <thead>
+                                <tr>
+                                    <td width="50px"><a class="white-text templatemo-sort-by"> <span class="caret"></span></a></td>
+                                    <td width="100px"><a class="white-text templatemo-sort-by">实验名 <span class="caret"></span></a></td>
+                                    <td width="100px"><a class="white-text templatemo-sort-by">任课教师 <span class="caret"></span></a></td>
+                                    <td width="100px"><a class="white-text templatemo-sort-by">学年学期 <span class="caret"></span></a></td>
+                                    <td width="80px"><a class="white-text templatemo-sort-by">课时数 <span class="caret"></span></a></td>
+                                    <td width="80px"><a class="white-text templatemo-sort-by">学分数 <span class="caret"></span></a></td>
+                                    <td width="200">操作</td>
+                                </tr>
+                            </thead>
+                            <div th:if="${seeAll == 1}">
+                            <tbody>
+								<tr th:each="vo:${vos}" th:value="${vo.get('course').id}">
+									<td th:text="${vo.get('course').id}">1.</td>
+									<td th:text="${vo.get('course').expName}" class="edit">物理</td>
+                                    <td th:text="${vo.get('teacher').name}" class="edit">老师</td>
+                                    <td th:text="${vo.get('course').semester}" class="edit">2018年春季</td>
+                                    <td th:text="${vo.get('course').period}" class="edit">32</td>
+									<td th:text="${vo.get('course').credit}" class="edit">3.5</td>
+                                    <td width="200">
+                                        <button class="templatemo-edit-btn edit-member" type="button">编辑</button>&nbsp;
+                                        <button class="templatemo-delete-btn delete-member" type="button">删除</button>
+                                    </td>
+								</tr>
+							 </tbody>
+                            </div>
+                            <div th:if="${selectedExps != null}">
+                                <tbody>
+                                <tr th:each="vo:${selectedVos}" th:value="${vo.get('course').id}">
+                                    <td th:text="${voStat.index + 1}">1.</td>
+                                    <td th:text="${vo.get('course').expName}" class="edit">物理</td>
+                                    <td th:text="${vo.get('teacher').name}" class="edit">老师</td>
+                                    <td th:text="${vo.get('course').semester}" class="edit">2018年春季</td>
+                                    <td th:text="${vo.get('course').period}" class="edit">32</td>
+                                    <td th:text="${vo.get('course').credit}" class="edit">3.5</td>
+                                    <td width="200">
+                                        <button class="templatemo-edit-btn edit-member" type="button">编辑</button>&nbsp;
+                                        <button class="templatemo-delete-btn delete-member" type="button">删除</button>
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </div>
+                        </table>
+                    </div>
+                </div>
+                <div class="templatemo-content-widget white-bg">
+                    <h2 class="margin-bottom-10">添加课程</h2>
+                    <form id="addcourse-form" class="templatemo-login-form" method="post" enctype="multipart/form-data">
+                        <div class="row form-group">
+                            <div class="col-lg-6 col-md-6 form-group">
+                                <label>课程名</label>
+                                <input type="text" class="form-control" id="courseName" name="courseName" placeholder="请输入课程名..">
+                            </div>
+                            <div class="col-lg-6 col-md-6 form-group">
+                                <label>课时数</label>
+                                <input type="text" class="form-control" id="period" name="period" placeholder="请输入课时数..">
+                            </div>
+                        </div>
+                        <div class="row form-group">
+                            <div class="col-lg-6 col-md-6 form-group">
+                                <label>学分</label>
+                                <input type="text" class="form-control" id="credit" name="credit" placeholder="请输入学分..">
+                            </div>
+                            <div class="col-lg-6 col-md-6 form-group">
+                                <label>任课教师</label>
+                                <input type="text" class="form-control" id="teacher" name="teacher" placeholder="请输入任课老师学工号..">
+                                <div style="display: inline" id="tip"></div>
+                            </div>
+                        </div>
+                        <div class="row form-group">
+                            <div class="col-lg-6 col-md-6 form-group">
+                                <label>学年学期</label>
+                                <input type="text" class="form-control" id="semester" name="semester" placeholder="请输入学期..">
+                            </div>
+                            <div class="col-lg-6 col-md-6 form-group text-right margin-top-20">
+                                <button id='addExp' type="button" class="templatemo-blue-button">添加</button>
+                                <button type="reset" class="templatemo-white-button">重置</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <!--<div class="mask"></div>-->
+            <!--<div class="dialog">-->
+                <!--<div class="title">-->
+                    <!--添加时提示-->
+                <!--</div>-->
+                <!--<div class="content">-->
+                    <!--<span>添加成功！</span>-->
+                <!--</div>-->
+                <!--<div class="bottom">-->
+                    <!--<input id="release-btn" type="button" value="确定" class="templatemo-edit-btn">-->
+                <!--</div>-->
+            <!--</div>-->
+            <!-- Second row ends -->
+            <footer th:replace="/html-admin/common-admin :: footer"></footer>
+        </div>
+    </div>
+
+    <!-- JS -->
+    <script src="../js/jquery.js"></script>
+    <script src="../js/main.js"></script>
+    <script src="https://rawgit.com/indrimuska/jquery-editable-select/master/src/jquery-editable-select.js"></script>
+    <script src="../js/edittableSelect.js"></script>
+    <script>
+        $('#all').on("click",function () {
+            var userAccount = $('#userAccount').attr("value");
+            var url = "/"+userAccount+"/courseManage";
+            window.location.href = url;
+        });
+        $("#search-btn").on("click",function () {
+            var userAccount = $('#userAccount').attr("value");
+            var url = "/"+userAccount+"/courseManage?seeAll=0";
+            var semester = $('#param1').val();
+            var course = $('#param2').val();
+            var teacher = $('#param3').val();
+            if(semester !== ""){
+                url = url + "&param1="+semester;
+            }
+            if(course !== ""){
+                url = url + "&param2="+course;
+            }
+            if(teacher !== ""){
+                url = url + "&param3="+teacher;
+            }
+            $.ajax({
+                type:"post",
+                url:url,
+                success:function () {
+                    window.location.href=url;
+                }
+            });
+        });
+        $('.delete-member').click(function () {
+            var tr = $(this).parent('td').parent('tr');
+            var id = tr.attr("value");
+            var userAccount = $('#userAccount').attr("value");
+            if(confirm("真的要删除该实验课吗，该实验的所有选课也将被删除？")){
+                $.ajax({
+                    url:"/deleteExp?expId="+id,
+                    type:"post",
+                    success:function () {
+                        alert("删除成功！");
+                        window.location.href = '/'+ userAccount + '/courseManage';
+                    }
+                })
+            }
+        });
+        var flag1 = false;
+        $("#teacher").blur(function () {
+            var teacher = $("#teacher").val();
+            var head = teacher.charAt(0);
+            if(head !== 'T'||teacher.length !== 10){
+                $("#tip").html("<font color=\"green\" size=\"3\">教师学工号不符合要求</font>");
+            }else {
+                $("#tip").html("<font color=\"green\" size=\"3\">格式正确</font></font>");
+                flag1 = true;
+            }
+        });
+        $("#addExp").on("click",function () {
+            if(flag1){
+                var courseName = $("#courseName").val();
+                var period = $("#period").val();
+                var credit = $("#credit").val();
+                var teacher = $("#teacher").val();
+                var semester = $("#semester").val();
+                var userAccount = $('#userAccount').attr("value");
+                var url = "/addExp?courseName="+courseName+"&period="+period+"&credit="+credit+"&semester="+semester+"&teacher="+teacher;
+                $.ajax({
+                    url:url,
+                    type:"post",
+                    success:function (re) {
+                        var result = JSON.parse(re);
+                        if(result.code === 0){
+                            alert("已成功添加一门实验！");
+                        }else {
+                            alert("教师学工号不存在或参数异常！");
+                        }
+
+                        window.location.href = '/'+userAccount+'/courseManage';
+                    }})
+            }else {
+                alert("没有按要求输入或参数异常！");
+            }
+        });
+    </script>
+</body>
+
+</html>

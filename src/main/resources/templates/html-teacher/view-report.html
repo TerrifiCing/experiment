@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="/html-teacher/common-teacher :: link"></head>
+
+<body>
+    <!-- Left column -->
+    <div class="templatemo-flex-row">
+        <div th:replace="/html-teacher/common-teacher :: left"></div>
+        <!-- Main content -->
+        <div class="templatemo-content col-1 light-gray-bg">
+            <div class="templatemo-top-nav-container">
+                <div class="row">
+                    <nav class="templatemo-top-nav col-lg-12 col-md-12">
+                        <ul class="text-uppercase">
+                            <li>
+                                <h2><a th:href="@{/{account}/reportManage (account=${user.account})}">管理实验报告</a></h2>
+                            </li>
+                            <li>
+                                <h2><a class="active">查看实验报告</a></h2>
+                            </li>
+                            <div style="float: right">
+                                <li>
+                                    <div class="dropdown">
+                                        <img id="avatar-img" src="../images/sunset.jpg" th:src="${user.url}" alt="头像">
+                                        <div class="dropdown-content">
+                                            <a th:href="@{/{account}/userCenter (account=${user.account})}">个人主页</a>
+                                            <a th:href="@{/{account}/changePassword (account=${user.account})}">修改密码</a>
+                                            <a href="/logout">退出登录</a>
+                                        </div>
+                                    </div>
+                                </li>
+                                <li style="font-family: 微软雅黑" th:text="'&nbsp; ' + ${user.nickname}+'，欢迎回来！'">U201513315，欢迎回来！</li>
+                            </div>
+                        </ul>
+                    </nav>
+                </div>
+            </div>
+            <div class="templatemo-content-container">
+                <object th:data="${reportVo.get('report').reportUrl}" type="application/pdf" width="95%" height="750">
+                    <embed>
+                    <p>This browser does not support PDFs. Please download the PDF to view it: <a>Download PDF</a>.</p>
+                    </embed>
+                </object>
+                <div class="templatemo-content-widget white-bg">
+                    <div class="row form-group">
+                        <div class="col-lg-6 col-md-6 form-group">
+                            <label style="display: inline;" class="control-label templatemo-block" ><h4 th:text="'学生姓名：'+ ${reportVo.get('student').name}">学生姓名:田聪</h4></label>
+                            <label></label>
+                            <label style="display: inline;" class="control-label templatemo-block" ><h4 th:text="'学生姓名：'+ ${reportVo.get('student').account}">学    号:U201413407</h4></label>
+                            <label></label>
+                        </div>
+                        <div class="col-lg-6 col-md-6 form-group">
+                            <label style="display: inline;" class="control-label templatemo-block" ><h4 th:text="'实验名：'+${reportVo.get('exp').expName}">实 验 名:物理实验</h4></label>
+                            <label></label>
+                            <label style="display: inline;" class="control-label templatemo-block" ><h4 th:text="'指导老师：'+ ${reportVo.get('teacher').name}">指导老师:</h4></label>
+                            <label></label>
+                        </div>
+                    <div class="col-lg-6 col-md-6 form-group">
+                        <label style="display: inline;" class="control-label templatemo-block" ><h3>得分:</h3></label>
+                        <p id="reportId" th:value="${reportVo.get('report').id}"></p>
+                        <input style="margin-top: 10px;"type="text" class="form-control" id="input-score" placeholder="请输入得分..">
+                    </div>
+                        <div class="col-lg-6 col-md-6 form-group">
+                            <div class="form-group text-right">
+                                <button style="margin-top: 20px;" id='upScore' type="button" class="templatemo-blue-button">确认</button>
+                            </div>
+                        </div>
+                </div>
+                </div>
+            </div>
+            <div class="mask"></div>
+                <div class="dialog">
+                    <div class="title">
+                        打分时提示
+                    </div>
+                    <div class="content">
+                        <span>打分成功！</span>
+                    </div>
+                    <div class="bottom">
+                        <input id="release-btn" type="button" value="确定" class="templatemo-edit-btn">
+                    </div>
+                </div>
+            <!-- Second row ends -->
+            <footer th:replace="/html-admin/common-admin :: footer"></footer>
+        </div>
+    </div>
+    </div>
+    <!-- JS -->
+    <script src="../js/jquery.js"></script>
+    <script src="../js/main.js"></script>
+    <script>
+        $("#upScore").on("click",function () {
+            var score = $('#input-score').val();
+            var id = $('#reportId').attr("value");
+            url = "/score?reportId="+id+"&score="+score;
+            if(confirm("确定要提交评分吗？")){
+                $.ajax({
+                    url:url,
+                    type:"post",
+                    success:function () {
+                        alert("提交评分成功！");
+                    }
+                })
+            }
+        })
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="/html-student/common-student :: link"></head>
+
+<body>
+    <!-- Left column -->
+    <div class="templatemo-flex-row">
+        <div th:replace="/html-student/common-student :: left"></div>
+        <!-- Main content -->
+        <div class="templatemo-content col-1 light-gray-bg">
+            <div class="templatemo-top-nav-container">
+                <div class="row">
+                    <nav class="templatemo-top-nav col-lg-12 col-md-12">
+                        <ul class="text-uppercase">
+                            <li>
+                                <h2><a th:href="@{/{account}/report (account=${user.account})}">实验报告</a></h2>
+                            </li>
+                            <li>
+                                <h2><a onclick="f1()">提交实验报告</a></h2>
+                            </li>
+                            <li><h2><a class="active">查看实验报告</a></h2></li>
+                            <div style="float: right">
+                                <li>
+                                    <div class="dropdown">
+                                        <img id="avatar-img" src="../images/sunset.jpg" th:src="${user.url}" alt="头像">
+                                        <div class="dropdown-content">
+                                            <a th:href="@{/{account}/userCenter (account=${user.account})}">个人主页</a>
+                                            <a th:href="@{/{account}/changePassword (account=${user.account})}">修改密码</a>
+                                            <a href="/logout">退出登录</a>
+                                        </div>
+                                    </div>
+                                </li>
+                                <li style="font-family: 微软雅黑" th:text="'&nbsp; ' + ${user.nickname}+'，欢迎回来！'">U201513315，欢迎回来！</li>
+                            </div>
+                        </ul>
+                    </nav>
+                </div>
+            </div>
+            <div class="templatemo-content-container">
+                <object th:data="${report.reportUrl}" type="application/pdf" width="95%" height="750">
+                    <embed>
+                    <p>This browser does not support PDFs. Please download the PDF to view it: <a>Download PDF</a>.</p>
+                    </embed>
+                </object>
+
+            <!-- Second row ends -->
+            <footer th:replace="/html-student/common-student :: footer"></footer>
+        </div>
+    </div>
+    </div>
+    <!-- JS -->
+    <script src="../js/jquery.js"></script>
+    <script src="../js/main.js"></script>
+    <script>
+        function f1() {
+            alert("请前往'实验报告'页面进行操作！");
+        }
+    </script>
+</body>
+
+</html>

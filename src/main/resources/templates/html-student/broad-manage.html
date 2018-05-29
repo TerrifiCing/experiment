@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="/html-student/common-student :: link"></head>
+
+<body>
+  <!-- Left column -->
+  <div class="templatemo-flex-row">
+    <div th:replace="/html-student/common-student :: left"></div>
+    <!-- Main content -->
+    <div class="templatemo-content col-1 light-gray-bg">
+      <div class="templatemo-top-nav-container">
+        <div class="row">
+          <nav class="templatemo-top-nav col-lg-12 col-md-12">
+            <ul class="text-uppercase">
+              <li>
+                <h2><a href="#" class="active">浏览公告</a></h2>
+              </li>
+              <div style="float: right">
+                <li><button id="attendance" class="templatemo-edit-btn">签到</button></li>
+                <li>
+                  <div class="dropdown">
+                    <img id="avatar-img" src="../images/sunset.jpg" th:src="${user.url}" alt="头像">
+                    <div class="dropdown-content">
+                      <a th:href="@{/{account}/userCenter (account=${user.account})}">个人主页</a>
+                      <a th:href="@{/{account}/changePassword (account=${user.account})}">修改密码</a>
+                      <a href="/logout">退出登录</a>
+                    </div>
+                  </div>
+                </li>
+                <li style="font-family: 微软雅黑" th:text="'&nbsp; ' + ${user.nickname}+'，欢迎回来！'">U201513315，欢迎回来！</li>
+              </div>
+            </ul>
+          </nav>
+        </div>
+      </div>
+      <div class="templatemo-content-container">
+        <tr th:each="mailVo : ${mailVos}">
+          <td>
+            <div class="templatemo-flex-row flex-content-row">
+              <div class="templatemo-content-widget white-bg col-2">
+                <i class="fa fa-times"></i>
+                <div class="square"></div>
+                <h2 class="announcement-title templatemo-inline-block" th:text="${mailVo.get('mail').title}">公告1</h2>
+                <p hidden="hidden" th:value="${mailVo.get('mail').id}"></p>
+                <div class="announcement-status">
+                  <div class="publisher" th:text="'发布人：' + ${mailVo.get('fromName')}">发布人：陈老师</div>
+                  <div class="release-date" th:text="'发布时间：' + ${#dates.format(mailVo.get('mail').time, 'yyyy/MM/dd HH:mm')}">发布时间：2018.03.01  </div>
+                  <div class="label label-success release-label" th:text="${mailVo.get('mail').about}">模电</div>
+                </div>
+                <hr/>
+                <p th:text="${mailVo.get('mail').content}">公告内容
+                </p>
+
+              </div>
+            </div>
+          </td>
+        </tr>
+
+      </div>
+      <footer th:replace="/html-student/common-student :: footer"></footer>
+    </div>
+  </div>
+  </div>
+  <!-- JS -->
+  <script src="../js/jquery.js"></script>
+  <script src="../js/main.js"></script>
+</body>
+
+</html>
